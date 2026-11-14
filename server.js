@@ -2,6 +2,7 @@ import express from 'express';
 import cookieSession from 'cookie-session';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import authRoutes from './api/auth.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -16,6 +17,9 @@ app.use(cookieSession({
 }));
 
 // routes go here, e.g. app.use('/api/auth', authRoutes);
+
+app.use('/api/auth', authRoutes);
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
