@@ -1,6 +1,7 @@
+DROP TABLE IF EXISTS shortcuts;
 Drop TABLE IF EXISTS calendar_connections;
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS shortcuts;
+
 
 
 CREATE TABLE users (
@@ -29,3 +30,5 @@ CREATE TABLE shortcuts (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (user_id, position)
 );
+
+CREATE INDEX idx_connections_user_id ON calendar_connections(user_id);
