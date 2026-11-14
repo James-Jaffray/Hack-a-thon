@@ -1,0 +1,10 @@
+.flex-container {
+    display: flex;
+    gap: 2rem;
+}
+
+.shortcut-icon {
+    border: 1px solid black;
+    border-radius: 50%;
+    width: 5rem;
+}
