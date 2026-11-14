@@ -1,0 +1,1 @@
+let shortcuts = localStorage.getItem('shortcuts');
