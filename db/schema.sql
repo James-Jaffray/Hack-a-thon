@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS shortcuts;
-Drop TABLE IF EXISTS calendar_connections;
+DROP TABLE IF EXISTS calendar_connections;
 DROP TABLE IF EXISTS users;
 
 
