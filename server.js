@@ -7,6 +7,8 @@ import authRoutes from './api/auth.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
+app.set('trust proxy',1);
+
 app.use(express.json());
 app.use(cookieSession({
     name: 'session',
@@ -14,6 +16,7 @@ app.use(cookieSession({
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: 'lax',
+    secure: process.env.COOKIE_SECURE === 'true',
 }));
 
 // routes go here, e.g. app.use('/api/auth', authRoutes);
