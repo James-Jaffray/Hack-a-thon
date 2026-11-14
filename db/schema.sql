@@ -1,5 +1,8 @@
-Drop TABLE IF EXISTS calendar_connections;
+DROP TABLE IF EXISTS shortcuts;
+DROP TABLE IF EXISTS calendar_connections;
 DROP TABLE IF EXISTS users;
+
+
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -18,21 +21,6 @@ CREATE TABLE calendar_connections (
     UNIQUE (user_id, provider, credential)
 );
 
-
-CREATE INDEX idx_connections_user_id ON calendar_connections(user_id);
-
-
-
-INSERT INTO users (email, password_hash)
-VALUES ('test@example.com', 'fakehash');
-INSERT INTO calendar_connections (user_id, provider, credential)
-VALUES (1, 'google', 'fake-token');
-
-
-DELETE FROM users WHERE id = 1;
-SELECT * FROM calendar_connections;
-
-
 CREATE TABLE shortcuts (
     id         SERIAL PRIMARY KEY,
     user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -42,3 +30,5 @@ CREATE TABLE shortcuts (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (user_id, position)
 );
+
+CREATE INDEX idx_connections_user_id ON calendar_connections(user_id);
