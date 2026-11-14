@@ -5,7 +5,7 @@ const shortcutCont = document.getElementById('shortcut-container');
 async function getUsers() {
     const users = await sql`
         select id, email
-        from users
+        from users;
     `;
     return users;
 }
