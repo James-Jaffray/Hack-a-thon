@@ -1,3 +1,11 @@
+import weatherJs from "weather-js";
+
+weatherJs.find({search: 'San Francisco, CA', degreeType: 'F'}, function(err, result) {
+  if(err) console.log(err);
+ 
+  console.log(JSON.stringify(result, null, 2));
+});
+
 const shortcutCont = document.getElementById('shortcut-container');
 
 function createShortcuts() {

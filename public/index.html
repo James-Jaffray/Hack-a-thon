@@ -42,6 +42,29 @@
         <!-- Time, Date, Greeting -->
         <div>
             <h1 id="greeting"></h1>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="css/style.css">
+        <script type="module" src="js/script.js"></script>
+    </head>
+    <body>
+        <form action="https://www.google.com/search" class="searchform" method="get" name="searchform" target="_blank">
+            <input name="sitesearch" type="hidden">
+            <input autocomplete="on" class="form-control search" name="q" placeholder="Search in example.com" required="required"  type="text">
+            <button class="button" type="submit">Search</button>
+        </form>
+        <div class="flex-container" id="shortcut-container">
+            <!-- shortcut item template -->
+            <template>
+                <div class="shortcut">
+                    <a href="https://google.com" target="_blank">
+                        <img src="" alt="shortcut icon" class="shortcut-icon">
+                    </a>
+                    <p class="shortcut-name">shortcut 1</p>
+                </div>
+            </template>
         </div>
 
         <div id="date-time">
