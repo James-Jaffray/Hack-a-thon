@@ -4,7 +4,7 @@ export function getDate() {
     let month = today.getMonth();
     let day = today.getDate();
     let date = document.getElementById('date');
-    date.textContent = `${year}/${month}/${day}`;
+    date.textContent = `${year}/${month+1}/${day}`;
 }
 
 export function updateClock() {
