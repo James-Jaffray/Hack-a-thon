@@ -1,53 +1,98 @@
+
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dashboard</title>
-        <script type="module" src="js/auth-guard.js"></script>
-        <script type="module" src="js/dashboard.js"></script>
-                <script type="module" src="js/connections.js"></script>
-    </head>
-    <body>
-        <section>
-            <button type="button" id="logout-button">
-                Log out
-            </button>
-        </section>
-        <section>
-            <h2>
-                Themes
-            </h2>
-            
-        </section>
-        <hr>
-                <section id="connections">
-            <h2>Calendars</h2>
-            <p id="connections-message" role="status"></p>
-            <ul id="connections-list"></ul>
 
-            <p><a href="/auth/google">Connect Google Calendar</a></p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="js/auth-guard.js"></script>
+    <script type="module" src="js/dashboard.js"></script>
+    <script type="module" src="js/connections.js"></script>
+</head>
 
-            <form id="apple-form">
-                <h3>Add an Apple Calendar</h3>
-                <label for="apple-url">Public calendar link</label>
-                <input id="apple-url" type="text" placeholder="webcal://... or https://...ics" required>
-                <label for="apple-name">Name</label>
-                <input id="apple-name" type="text" placeholder="Althea – Apple">
-                <button type="submit">Add Apple calendar</button>
-            </form>
-        </section>
-        <hr>
+<body>
+    <nav class="dashboard-nav">
+        <a href="index.html">Back to Main Page</a>
+        <button type="button" id="logout-button">
+            Log out
+        </button>
+    </nav>
+
+    <main class="dashboard-container">
         <section>
-            <h2>
-                Shortcuts
-            </h2>
+            <h2>Themes</h2>
         </section>
+
         <hr>
-        <span>
-            <a href="index.html">
-                goto mainpage
-            </a>
-        </span>
-    </body>
+
+        <section>
+            <h2>Shortcuts</h2>
+        </section>
+
+        <hr>
+
+        <section id="calendar-connections">
+            <h2>Calendar Connections</h2>
+
+            <div>
+                <h3>Google Calendar</h3>
+                <p>Connect securely using your Google account.</p>
+                <a href="/auth/google">
+                    Connect Google Calendar
+                </a>
+            </div>
+
+            <hr>
+
+            <div>
+                <h3>Apple Calendar</h3>
+                <p>Add an Apple Calendar using its public sharing URL.</p>
+
+                <form id="apple-calendar-form">
+                    <div>
+                        <label for="apple-calendar-name">
+                            Calendar Name
+                        </label>
+                        <input
+                            type="text"
+                            id="apple-calendar-name"
+                            placeholder="My Apple Calendar"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="apple-calendar-url">
+                            Apple Calendar Public Sharing URL
+                        </label>
+                        <input
+                            type="url"
+                            id="apple-calendar-url"
+                            placeholder="Paste Your Apple Calendar Sharing Link"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit">
+                        Add Apple Calendar
+                    </button>
+
+                    <p id="apple-calendar-error" role="alert"></p>
+                    <p id="apple-calendar-success" role="status"></p>
+                </form>
+            </div>
+
+            <hr>
+
+            <div>
+                <h3>Connected Calendars</h3>
+                <ul id="connected-calendars"></ul>
+            </div>
+        </section>
+
+        <hr>
+    </main>
+</body>
+
 </html>

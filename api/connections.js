@@ -11,11 +11,48 @@ router.use(requireAuth);
 // Never select `credential`: it holds refresh tokens.
 router.get('/', async (req, res) => {
     const rows = await sql`
-    SELECT id, provider, display_name AS "displayName", created_at AS "createdAt"
+    SELECT
+        id,
+        provider,
+        display_name AS "displayName",
+        created_at AS "createdAt",
+        is_enabled AS "isEnabled"
     FROM calendar_connections
     WHERE user_id = ${req.session.userId}
     ORDER BY id`;
+
     res.json(rows);
+});
+
+// PATCH /api/connections/:id
+router.patch('/:id', async (req, res) => {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id)) {
+        return res.status(400).json({ error: 'Bad id' });
+    }
+
+    const { isEnabled } = req.body ?? {};
+
+    if (typeof isEnabled !== 'boolean') {
+        return res.status(400).json({
+            error: 'isEnabled must be true or false'
+        });
+    }
+
+    const [row] = await sql`
+        UPDATE calendar_connections
+        SET is_enabled = ${isEnabled}
+        WHERE id = ${id}
+        AND user_id = ${req.session.userId}
+        RETURNING id, is_enabled AS "isEnabled"
+    `;
+
+    if (!row) {
+        return res.status(404).json({ error: 'Not found' });
+    }
+
+    res.json(row);
 });
 
 // DELETE /api/connections/:id
@@ -84,15 +121,23 @@ async function loadGoogleConnection(req, res) {
 
 // GET /api/connections/:id/calendars -> [{ id, name, color, enabled }]
 router.get('/:id/calendars', async (req, res) => {
-    const row = await loadGoogleConnection(req, res);
-    if (!row) return;
     try {
-        res.json(await listGoogleCalendars(row.credential, row.enabled_calendars));
+        const row = await loadGoogleConnection(req, res);
+        if (!row) return;
+
+        const calendars = await listGoogleCalendars(
+            row.credential,
+            row.enabled_calendars
+        );
+
+        res.json(calendars);
+
     } catch (err) {
-        console.warn('Listing calendars failed:', err.message);
-        res.status(502).json({
-            error: "Couldn't load calendars",
-            needsReconnect: Boolean(err.needsReconnect),
+        console.error('Google calendar loading error:', err);
+
+        res.status(500).json({
+            error: err.message,
+            needsReconnect: Boolean(err.needsReconnect)
         });
     }
 });
