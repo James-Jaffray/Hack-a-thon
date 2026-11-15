@@ -6,6 +6,7 @@
         <title>Dashboard</title>
         <script type="module" src="js/auth-guard.js"></script>
         <script type="module" src="js/dashboard.js"></script>
+                <script type="module" src="js/connections.js"></script>
     </head>
     <body>
         <section>
@@ -18,6 +19,23 @@
                 Themes
             </h2>
             
+        </section>
+        <hr>
+                <section id="connections">
+            <h2>Calendars</h2>
+            <p id="connections-message" role="status"></p>
+            <ul id="connections-list"></ul>
+
+            <p><a href="/auth/google">Connect Google Calendar</a></p>
+
+            <form id="apple-form">
+                <h3>Add an Apple Calendar</h3>
+                <label for="apple-url">Public calendar link</label>
+                <input id="apple-url" type="text" placeholder="webcal://... or https://...ics" required>
+                <label for="apple-name">Name</label>
+                <input id="apple-name" type="text" placeholder="Althea – Apple">
+                <button type="submit">Add Apple calendar</button>
+            </form>
         </section>
         <hr>
         <section>
