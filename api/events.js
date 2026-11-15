@@ -49,6 +49,7 @@ router.get('/', async (req, res) => {
                 connectionId: c.id,
                 provider: c.provider,
                 displayName: c.display_name,
+                ownerName: c.owner_name,
                 needsReconnect: Boolean(r.reason.needsReconnect),
             });
         }
