@@ -2,6 +2,7 @@ import { Router } from 'express';
 import sql from '../lib/db.js';
 import { requireAuth } from '../lib/auth.js';
 import { fetchGoogleEvents } from '../lib/google.js';
+import { fetchIcsEvents } from '../lib/ics.js';
 
 const router = Router();
 router.use(requireAuth);
@@ -26,6 +27,9 @@ router.get('/', async (req, res) => {
         if (c.provider === 'google') {
             return fetchGoogleEvents(c.credential, from.toISOString(), to.toISOString());
         }
+        if (c.provider === 'apple') {
+            return fetchIcsEvents(c.credential, from.toISOString(), to.toISOString(), c.display_name);
+        }
         return Promise.resolve([]); // apple/ICS comes later
     }));
 
@@ -47,6 +51,7 @@ router.get('/', async (req, res) => {
     });
 
     events.sort((a, b) => a.start.localeCompare(b.start));
+    events.sort((a, b) => new Date(a.start) - new Date(b.start));
     res.json({ events, errors });
 });
 
