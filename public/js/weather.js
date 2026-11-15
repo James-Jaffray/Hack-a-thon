@@ -70,6 +70,7 @@ export async function getCurrentWeather(latitude, longitude) {
     humidity.textContent = `Humidity: ${humidityText}%`;
 
 
+
     return data;
   } catch (error) {
     console.error('Failed to fetch weather data:', error);
