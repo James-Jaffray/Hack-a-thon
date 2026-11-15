@@ -1,78 +1,177 @@
-import { getConnections, deleteConnection, addApple } from './api.js';
+
+import {
+    addApple,
+    getConnections,
+    deleteConnection,
+    updateConnection
+} from './api.js';
+
 import { renderCalendarPicker } from './calendar-picker.js';
 
-const list = document.querySelector('#connections-list');
-const message = document.querySelector('#connections-message');
-const appleForm = document.querySelector('#apple-form');
+const list = document.querySelector('#connected-calendars');
 
-// The Google callback comes back as /dashboard.html?google=connected|denied|error
+const appleForm = document.querySelector('#apple-calendar-form');
+const message = document.querySelector('#apple-calendar-success');
+const errorMessage = document.querySelector('#apple-calendar-error');
+
+// Display the result of Google OAuth
 const googleResult = new URLSearchParams(location.search).get('google');
+
 if (googleResult) {
     message.textContent = {
         connected: 'Google Calendar connected.',
         denied: 'Google access was denied.',
-        error: 'Something went wrong connecting Google. Try again.',
+        error: 'Something went wrong connecting to Google. Try again.',
     }[googleResult] ?? '';
-    history.replaceState(null, '', location.pathname);   // clean the URL
+
+    history.replaceState(null, '', location.pathname);
 }
 
 async function loadConnections() {
-    const { ok, data } = await getConnections();
+    const result = await getConnections();
+
     list.replaceChildren();
 
-    if (!ok || !data) {
+    if (!result.ok || !result.data) {
         list.textContent = "Couldn't load calendars.";
         return;
     }
-    if (data.length === 0) {
+
+    if (result.data.length === 0) {
         list.textContent = 'No calendars connected yet.';
         return;
     }
 
-    for (const conn of data) {
-        const li = document.createElement('li');
+    result.data.forEach((connection) => {
+        const listItem = document.createElement('li');
 
-        const title = document.createElement('strong');
-        title.textContent = `${conn.displayName} (${conn.provider})`;
+        const calendarName = document.createElement('span');
+        calendarName.textContent =
+            `${connection.displayName} (${connection.provider})`;
 
-        const remove = document.createElement('button');
-        remove.type = 'button';
-        remove.textContent = 'Remove';
-        remove.addEventListener('click', async () => {
-            if (!confirm(`Remove ${conn.displayName}?`)) return;
-            const res = await deleteConnection(conn.id);
-            if (res.ok) loadConnections();
-            else message.textContent = "Couldn't remove that calendar.";
+        const disconnectButton = document.createElement('button');
+        disconnectButton.type = 'button';
+        disconnectButton.textContent = 'Disconnect';
+
+        disconnectButton.addEventListener('click', async () => {
+            const confirmed = confirm(
+                `Are you sure you want to disconnect ${connection.displayName}?`
+            );
+
+            if (!confirmed) return;
+
+            const result = await deleteConnection(connection.id);
+
+            if (result.ok) {
+                await loadConnections();
+            } else {
+                errorMessage.textContent =
+                    "Couldn't disconnect that calendar.";
+            }
         });
 
-        li.append(title, ' ', remove);
+        listItem.append(calendarName, ' ', disconnectButton);
 
-        // Google connections get the on/off list for their calendars
-        if (conn.provider === 'google') {
-            const picker = document.createElement('div');
-            li.append(picker);
-            renderCalendarPicker(picker, conn.id);
+        // Apple connection toggle
+        if (connection.provider === 'apple') {
+            const appleContainer = document.createElement('div');
+            appleContainer.classList.add('google-calendars');
+
+            const label = document.createElement('label');
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = connection.isEnabled;
+
+            const toggleText = document.createElement('span');
+            toggleText.textContent = 'Show calendar';
+
+            checkbox.addEventListener('change', async () => {
+                checkbox.disabled = true;
+
+                try {
+                    const result = await updateConnection(
+                        connection.id,
+                        checkbox.checked
+                    );
+
+                    if (!result.ok) {
+                        checkbox.checked = connection.isEnabled;
+
+                        errorMessage.textContent =
+                            result.data?.error ||
+                            'Unable to update calendar settings.';
+
+                        return;
+                    }
+
+                    connection.isEnabled = result.data.isEnabled;
+
+                    errorMessage.textContent = '';
+
+                } catch (error) {
+                    console.error('Failed to update Apple calendar:', error);
+
+                    checkbox.checked = connection.isEnabled;
+
+                    errorMessage.textContent =
+                        'Unable to connect to the server. Please try again.';
+
+                } finally {
+                    checkbox.disabled = false;
+                }
+            });
+
+            label.append(checkbox, toggleText);
+            appleContainer.append(label);
+            listItem.append(appleContainer);
         }
 
-        list.append(li);
-    }
+        // Google connection calendar picker
+        if (connection.provider === 'google') {
+            const picker = document.createElement('div');
+            picker.classList.add('google-calendars');
+
+            listItem.append(picker);
+            renderCalendarPicker(picker, connection.id);
+        }
+
+        list.append(listItem);
+    });
 }
 
+// Add an Apple Calendar
 appleForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+
+    errorMessage.textContent = '';
     message.textContent = '';
 
-    const icsUrl = document.querySelector('#apple-url').value.trim();
-    const displayName = document.querySelector('#apple-name').value.trim();
+    const icsUrl = document.querySelector('#apple-calendar-url').value.trim();
+    const displayName = document.querySelector('#apple-calendar-name').value.trim();
 
-    const res = await addApple(icsUrl, displayName || undefined);
-    if (res.ok) {
+    try {
+        const result = await addApple(icsUrl, displayName);
+
+        if (!result.ok) {
+            errorMessage.textContent =
+                result.data?.error || "Couldn't add that calendar.";
+
+            return;
+        }
+
+        message.textContent = 'Calendar connected successfully!';
+
         appleForm.reset();
-        message.textContent = 'Calendar added.';
-        loadConnections();
-    } else {
-        message.textContent = res.data?.error ?? "Couldn't add that calendar.";
+        await loadConnections();
+
+    } catch (error) {
+        console.error('Failed to add Apple Calendar:', error);
+
+        errorMessage.textContent =
+            'Unable to connect to the server. Please try again.';
     }
 });
 
+// Load connections when the dashboard opens
 loadConnections();

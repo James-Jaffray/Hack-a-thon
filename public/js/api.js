@@ -18,6 +18,11 @@ export const saveShortcut = (position, label, url) => api(`/api/shortcuts/${posi
 export const deleteShortcut = (position) => api(`/api/shortcuts/${position}`, { method: 'DELETE' });
 export const getConnections = () => api('/api/connections');
 export const deleteConnection = (id) => api(`/api/connections/${id}`, { method: 'DELETE' });
+export const updateConnection = (id, isEnabled) =>
+    api(`/api/connections/${id}`, {
+        method: 'PATCH',
+        body: { isEnabled }
+    });
 export const addApple = (icsUrl, displayName) => api('/api/connections/apple', { method: 'POST', body: { icsUrl, displayName } });
 
 export const getCalendars = (connectionId) => api(`/api/connections/${connectionId}/calendars`);
