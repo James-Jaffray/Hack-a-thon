@@ -50,17 +50,25 @@ export async function getCurrentWeather(latitude, longitude) {
     console.log('Feels Like:', data.feelsLikeTemperature?.degrees);
     console.log('Humidity:', data.relativeHumidity + '%');
 
+    let conditionText = data.weatherCondition?.description?.text;
+    let temperatureText = data.temperature?.degrees;
+    let feelsListText = data.feelsLikeTemperature?.degrees;
+    let unitText = data.temperature?.unit;
+    let humidityText = data.relativeHumidity;
+    let iconBase = data.weatherCondition?.iconBaseUri;
+
     const temperature = document.getElementById('Tempature');
-    temperature.textContent = `Tempature: ${data.temperature?.degrees} ${data.temperature?.unit}`;
+    temperature.textContent = `Tempature: ${temperatureText} ${unitText}`;
 
     const feelsLike = document.getElementById('feels-like');
-    feelsLike.textContent = `Feels Like: ${data.feelsLikeTemperature?.degrees}  ${data.temperature?.unit}`;
+    feelsLike.textContent = `Feels Like: ${feelsListText}  ${unitText}`;
 
     const condition = document.getElementById('Condition');
-    condition.textContent = `Condition: ${data.weatherCondition?.description?.text}`
+    condition.textContent = `Condition: ${conditionText}`
 
-    const Humidity = document.getElementById('Humidity');
-    Humidity.textContent = `Humidity: ${data.relativeHumidity}%`;
+    const humidity = document.getElementById('Humidity');
+    humidity.textContent = `Humidity: ${humidityText}%`;
+
 
 
     return data;
