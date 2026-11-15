@@ -28,11 +28,6 @@
         <div>
             <h1 id="greeting"></h1>
         </div>
-        <form action="https://www.google.com/search" class="searchform" method="get" name="searchform" target="_blank">
-            <input name="sitesearch" type="hidden">
-            <input autocomplete="on" class="form-control search" name="q" placeholder="Search in example.com" required="required"  type="text">
-            <button class="button" type="submit">Search</button>
-        </form>
         <div class="flex-container" id="shortcut-container">
             <!-- shortcut item template -->
             <template>
@@ -54,16 +49,11 @@
     <main>
 
         <section id="search">
-            <!-- Google search bar -->
-            <form action="https://www.google.com/search" method="get">
-                <label for="google">Google</label>
-
-                <input type="search" id="google" name="google" placeholder="Ask Google">
-
-                <!-- Might not want -->
-                <button type="submit">Submit</button>
-
-            </form>
+            <form action="https://www.google.com/search" class="searchform" method="get" name="searchform" target="_blank">
+            <input name="sitesearch" type="hidden">
+            <input autocomplete="on" class="form-control search" name="q" placeholder="Search in example.com" required="required"  type="text">
+            <button class="button" type="submit">Search</button>
+        </form>
         </section>
 
         <section id="weather">
