@@ -6,13 +6,8 @@ let month = new Date().getMonth();   // 0-based
 async function renderMonth() {
     const from = new Date(year, month, 1).toISOString();
     const to   = new Date(year, month + 1, 1).toISOString();
-    const { status, data } = await getEvents(from, to);
+    const { ok, status, data } = await getEvents(from, to);
     if (status === 401) { window.location.href = '/login.html'; return; }
-
-    const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
-
-    document.getElementById('month-year').textContent =
-        new Date(year, month, 1).toLocaleDateString('en-CA', { month: 'long', year: 'numeric' });
 
     let body = document.getElementById('calendar-body');
     if (!body) {
@@ -21,6 +16,18 @@ async function renderMonth() {
         document.getElementById('calendar').append(body);
     }
     body.replaceChildren();
+
+    if (!ok || !data) {
+        const p = document.createElement('p');
+        p.textContent = `Couldn't load events (status ${status}).`;
+        body.append(p);
+        return;
+    }
+
+    const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
+
+    document.getElementById('month-year').textContent =
+        new Date(year, month, 1).toLocaleDateString('en-CA', { month: 'long', year: 'numeric' });
 
     function dayKey(ev) {
         return ev.allDay ? ev.start : new Date(ev.start).toLocaleDateString('en-CA');
@@ -85,6 +92,39 @@ async function renderMonth() {
     }
 
     body.append(grid);
+
+
+    // Events Today (only when viewing the current month)
+    const today = new Date();
+    if (year === today.getFullYear() && month === today.getMonth()) {
+        const todays = byDay.get(today.toLocaleDateString('en-CA')) ?? [];
+        const list = document.querySelector('#upcoming-events .event-list');
+        list.replaceChildren();
+
+        if (todays.length === 0) {
+            const p = document.createElement('p');
+            p.textContent = 'Nothing scheduled today.';
+            list.append(p);
+        }
+
+        for (const ev of todays) {
+            const row = document.createElement('div');
+            row.className = 'today-event';
+
+            const dot = document.createElement('span');
+            dot.className = 'dot';
+            dot.style.background = ev.color;
+
+            const time = ev.allDay
+                ? 'All day'
+                : new Date(ev.start).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+
+            row.append(dot, `${time}  ${ev.title}`);
+            list.append(row);
+        }
+    }
+
+
 
     // Notices for connections that failed
     for (const err of data.errors) {

@@ -18,19 +18,19 @@ router.get('/', async (req, res) => {
     }
 
     const connections = await sql`
-    SELECT id, provider, credential, display_name
+    SELECT id, provider, credential, display_name, enabled_calendars
     FROM calendar_connections
     WHERE user_id = ${req.session.userId}`;
 
-    // allSettled: one broken connection must not take down the others
+        // allSettled: one broken connection must not take down the others
     const results = await Promise.allSettled(connections.map((c) => {
         if (c.provider === 'google') {
-            return fetchGoogleEvents(c.credential, from.toISOString(), to.toISOString());
+            return fetchGoogleEvents(c.credential, from.toISOString(), to.toISOString(), c.enabled_calendars);
         }
         if (c.provider === 'apple') {
             return fetchIcsEvents(c.credential, from.toISOString(), to.toISOString(), c.display_name);
         }
-        return Promise.resolve([]); // apple/ICS comes later
+        return Promise.resolve([]); // unknown provider
     }));
 
     const events = [];
@@ -50,7 +50,6 @@ router.get('/', async (req, res) => {
         }
     });
 
-    events.sort((a, b) => a.start.localeCompare(b.start));
     events.sort((a, b) => new Date(a.start) - new Date(b.start));
     res.json({ events, errors });
 });

@@ -17,6 +17,7 @@ CREATE TABLE calendar_connections (
     provider TEXT NOT NULL CHECK (provider IN ('google', 'apple')),
     credential TEXT NOT NULL,
     display_name TEXT,
+    enabled_calendars JSONB,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (user_id, provider, credential)
 );
