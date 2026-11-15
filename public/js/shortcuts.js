@@ -1,10 +1,10 @@
-import { getShortcuts, saveShortcut, deleteShortcut } from './api.js';
+import { getShortcuts } from './api.js';
 
 const shortcutCont = document.getElementById('shortcut-container');
 
 export const shortcuts = await (await fetch('../api/shortcuts')).json();
 
-export async function createShortcuts() {
+export async function renderShortcuts() {
     const result = await getShortcuts();
     const errorMsg = document.createElement('p');
 

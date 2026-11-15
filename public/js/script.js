@@ -1,5 +1,5 @@
 import { getCurrentWeather } from "./weather.js";
-import { createShortcuts, shortcuts } from "./shortcuts.js";
+import { renderShortcuts, shortcuts } from "./shortcuts.js";
 import { updateClock, getDate } from "./clock.js";
 
 /*weatherJs.find({search: 'San Francisco, CA', degreeType: 'F'}, function(err, result) {
@@ -14,4 +14,4 @@ getCurrentWeather( 53.5461, -113.4938);
 getDate();
 updateClock();
 
-createShortcuts();
+renderShortcuts();
