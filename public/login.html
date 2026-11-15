@@ -17,6 +17,8 @@
                 <h1>CalHub</h1>
             </header>
 
+            <datalist id="saved-hubs"></datalist>
+
             <div class="auth-toggle">
                 <button type="button" id="login-tab">
                     Log in to a hub
@@ -35,7 +37,7 @@
                 <p>Everyone sharing this hub logs in with the same hub name and password.</p>
 
                 <label for="login-email">Hub name</label>
-                <input type="text" id="login-email" name="email" autocomplete="username" required>
+                <input type="text" id="login-email" name="email" list="saved-hubs" autocomplete="username" required>
 
                 <label for="login-password">Password</label>
                 <input type="password" id="login-password" name="password" required>
@@ -50,11 +52,12 @@
             <form id="signup-form" hidden>
 
                 <h2>Create a shared hub</h2>
-                <p>Pick a hub name and password for your group. Everyone who joins uses them, then adds their own calendars on the dashboard.</p>
+                <p>Pick a hub name and password for your group. Everyone who joins uses them, then adds their own
+                    calendars on the dashboard.</p>
 
                 <label for="signup-email">Hub name</label>
-                <input type="text" id="signup-email" name="email" minlength="3" maxlength="40" autocomplete="username"
-                    required>
+                <input type="text" id="signup-email" name="email" list="saved-hubs" minlength="3" maxlength="40"
+                    autocomplete="username" required>
 
                 <label for="signup-password">Password</label>
                 <input type="password" id="signup-password" name="password" minlength="8" maxlength="72" required>

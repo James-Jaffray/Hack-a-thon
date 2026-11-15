@@ -1,5 +1,8 @@
 
 import { login, signup } from './api.js';
+import { fillHubList, saveHub } from './hubs.js';
+
+fillHubList(document.querySelector('#saved-hubs'));
 
 // Login elements
 const loginTab = document.querySelector('#login-tab');
@@ -41,6 +44,7 @@ signupForm.addEventListener('submit', async (event) => {
         const result = await signup(email, password);
 
         if (result.ok) {
+            saveHub(email.trim().toLowerCase());
             window.location.href = 'index.html';
         } else {
             signupError.textContent =
@@ -72,6 +76,7 @@ loginForm.addEventListener('submit', async (event) => {
         const result = await login(email, password);
 
         if (result.ok) {
+            saveHub(email.trim().toLowerCase());
             window.location.href = 'index.html';
         } else {
             loginError.textContent =
