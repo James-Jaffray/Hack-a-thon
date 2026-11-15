@@ -30,6 +30,7 @@ CREATE TABLE shortcuts (
     position   SMALLINT NOT NULL CHECK (position BETWEEN 1 AND 5),
     label      TEXT NOT NULL,
     url        TEXT NOT NULL CHECK (url ~* '^https?://'),
+    image_url  TEXT CHECK (image_url ~* '^https?://'),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (user_id, position)
 );
