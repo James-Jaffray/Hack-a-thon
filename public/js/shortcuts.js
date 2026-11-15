@@ -1,21 +1,37 @@
+import { getShortcuts, saveShortcut, deleteShortcut } from './api.js';
+
 const shortcutCont = document.getElementById('shortcut-container');
 
-
-
-export function createShortcuts() {
-    let container = document.createElement('div');
-    container.classList.add('shortcut');
+export async function createShortcuts() {
+    const { ok, data } = await getShortcuts();
+    const errorMsg = document.createElement('p');
     
-    let link = document.createElement('a');
-    link.href = "";
-    let image = document.createElement('img');
-    image.src = "";
-    image.alt = "shortcut image";
-    link.append(image);
+    if (!ok || !data) {
+        errorMsg.textContent = "Couldn't load shortcuts";
+        shortcutCont.append(errorMsg);
+        return;
+    }
+    if (data.length == 0) {
+        errorMsg.textContent = "No shortcuts saved on your account";
+        shortcutCont.append(errorMsg);
+        return;
+    }
 
-    let name = document.createElement('p');
+    for (const sc in data) {
+        let container = document.createElement('div');
+        container.classList.add('shortcut');
+        
+        let link = document.createElement('a');
+        link.href = "";
+        let image = document.createElement('img');
+        image.src = "";
+        image.alt = "shortcut image";
+        link.append(image);
 
-    container.append(link, name);
+        let name = document.createElement('p');
 
-    shortcutCont.append(container);
+        container.append(link, name);
+
+        shortcutCont.append(container);
+    }
 }
