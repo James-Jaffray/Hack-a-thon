@@ -23,7 +23,8 @@ export const updateConnection = (id, isEnabled) =>
         method: 'PATCH',
         body: { isEnabled }
     });
-export const addApple = (icsUrl, displayName) => api('/api/connections/apple', { method: 'POST', body: { icsUrl, displayName } });
+export const addApple = (icsUrl, displayName, ownerName) =>
+    api('/api/connections/apple', { method: 'POST', body: { icsUrl, displayName, ownerName } });
 
 export const getCalendars = (connectionId) => api(`/api/connections/${connectionId}/calendars`);
 export const saveCalendars = (connectionId, enabledIds) =>

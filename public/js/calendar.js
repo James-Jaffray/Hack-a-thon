@@ -71,7 +71,7 @@ async function renderMonth() {
             const time = ev.allDay
                 ? 'All day'
                 : new Date(ev.start).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-            line.title = `${time}  ${ev.title}`;   // full text on hover
+            line.title = `${time}  ${ev.title} (${ev.owner})`;   // full text + who it belongs to
 
             const dot = document.createElement('span');
             dot.className = 'dot';
@@ -119,7 +119,7 @@ async function renderMonth() {
                 ? 'All day'
                 : new Date(ev.start).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 
-            row.append(dot, `${time}  ${ev.title}`);
+            row.append(dot, `${time}  ${ev.title} · ${ev.owner}`);
             list.append(row);
         }
     }
@@ -132,7 +132,7 @@ async function renderMonth() {
         p.textContent = `${err.displayName} needs attention. `;
         if (err.needsReconnect) {
             const a = document.createElement('a');
-            a.href = '/auth/google';
+            a.href = `/auth/google?owner=${encodeURIComponent(err.ownerName ?? '')}`;
             a.textContent = 'Reconnect Google';
             p.append(a);
         }

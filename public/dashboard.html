@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,9 +38,10 @@
             <div>
                 <h3>Google Calendar</h3>
                 <p>Connect securely using your Google account.</p>
-                <a href="/auth/google">
-                    Connect Google Calendar
-                </a>
+
+                <label for="google-owner">Whose calendar is this?</label>
+                <input type="text" id="google-owner" placeholder="e.g. Althea" maxlength="40">
+                <button type="button" id="google-connect">Connect Google Calendar</button>
             </div>
 
             <hr>
@@ -55,23 +55,20 @@
                         <label for="apple-calendar-name">
                             Calendar Name
                         </label>
-                        <input
-                            type="text"
-                            id="apple-calendar-name"
-                            placeholder="My Apple Calendar"
-                        >
+                        <input type="text" id="apple-calendar-name" placeholder="My Apple Calendar">
+                    </div>
+
+                    <div>
+                        <label for="apple-calendar-owner">Whose calendar is this?</label>
+                        <input type="text" id="apple-calendar-owner" placeholder="e.g. Caleb" maxlength="40">
                     </div>
 
                     <div>
                         <label for="apple-calendar-url">
                             Apple Calendar Public Sharing URL
                         </label>
-                        <input
-                            type="url"
-                            id="apple-calendar-url"
-                            placeholder="Paste Your Apple Calendar Sharing Link"
-                            required
-                        >
+                        <input type="url" id="apple-calendar-url" placeholder="Paste Your Apple Calendar Sharing Link"
+                            required>
                     </div>
 
                     <button type="submit">

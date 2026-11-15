@@ -14,11 +14,11 @@ router.post('/signup', async (req, res) => {
 
     // Validate
     if (typeof email !== 'string' || typeof password !== 'string') {
-        return res.status(400).json({ error: 'Email and password are required' });
+        return res.status(400).json({ error: 'Hub name and password are required' });
     }
-    const cleanEmail = email.trim().toLowerCase();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
-        return res.status(400).json({ error: 'Enter a valid email' });
+    const cleanEmail = email.trim().toLowerCase();   // "email" column holds the hub name
+    if (cleanEmail.length < 3 || cleanEmail.length > 40) {
+        return res.status(400).json({ error: 'Hub name must be 3 to 40 characters' });
     }
     if (password.length < 8 || password.length > 72) {
         return res.status(400).json({ error: 'Password must be 8 to 72 characters' });
@@ -35,7 +35,7 @@ router.post('/signup', async (req, res) => {
         res.status(201).json(user);
     } catch (err) {
         if (err.code === '23505') {     // unique violation: email already exists
-            return res.status(409).json({ error: 'Email already registered' });
+            return res.status(409).json({ error: 'That hub name is taken' });
         }
         throw err;                      // anything else: Express 5 turns it into a 500
     }
@@ -57,7 +57,7 @@ router.get('/me', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { email, password } = req.body ?? {};
     if (typeof email !== 'string' || typeof password !== 'string') {
-        return res.status(400).json({ error: 'Email and password are required' });
+        return res.status(400).json({ error: 'Hub name and password are required' });
     }
 
     const [user] = await sql`
@@ -66,7 +66,7 @@ router.post('/login', async (req, res) => {
 
     const ok = user && await bcrypt.compare(password, user.password_hash);
     if (!ok) {
-        return res.status(401).json({ error: 'Invalid email or password' });
+        return res.status(401).json({ error: 'Invalid hub name or password' });
     }
 
     req.session.userId = user.id;
