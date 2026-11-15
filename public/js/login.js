@@ -1,6 +1,5 @@
 
 import { login, signup } from './api.js';
-console.log('login.js loaded');
 
 // Login elements
 const loginTab = document.querySelector('#login-tab');
@@ -63,6 +62,8 @@ const loginError = document.querySelector('#login-error');
 // Handle login form submission
 loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+
+    loginError.textContent = '';
 
     const email = loginEmail.value;
     const password = loginPassword.value;
