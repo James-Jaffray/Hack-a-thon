@@ -1,6 +1,5 @@
 
 import { login, signup } from './api.js';
-console.log('login.js loaded');
 
 // Login elements
 const loginTab = document.querySelector('#login-tab');
