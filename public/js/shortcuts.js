@@ -5,7 +5,7 @@ const shortcutCont = document.getElementById('shortcut-container');
 export async function createShortcuts() {
     const { ok, data } = await getShortcuts();
     const errorMsg = document.createElement('p');
-    
+
     if (!ok || !data) {
         errorMsg.textContent = "Couldn't load shortcuts";
         shortcutCont.append(errorMsg);
@@ -18,6 +18,7 @@ export async function createShortcuts() {
     }
 
     for (const sc in data) {
+        console.log(sc);
         let container = document.createElement('div');
         container.classList.add('shortcut');
         
