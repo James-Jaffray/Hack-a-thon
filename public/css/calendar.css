@@ -1,0 +1,28 @@
+.days-title, #calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+.days-title div { padding: 4px; font-weight: 600; }
+
+.day {
+    min-height: 90px;
+    border: 1px solid #ddd;
+    padding: 4px;
+    font-size: 12px;
+    overflow: hidden;
+}
+.day-num { font-weight: 600; margin-bottom: 4px; }
+.day-event {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.day-more { color: #666; font-size: 11px; }
+
+.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+}
