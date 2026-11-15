@@ -125,3 +125,8 @@
     display: flex;
     gap: 0.5rem;
 }
+
+
+.day { cursor: pointer; }
+.day:hover { background: #f5f7ff; }
+.day.selected { background: #eef1fb; }
