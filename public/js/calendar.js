@@ -4,17 +4,27 @@ let year = new Date().getFullYear();
 let month = new Date().getMonth();   // 0-based
 
 async function renderMonth() {
-    const from = new Date(year, month, 1).toISOString();
-    const to = new Date(year, month + 1, 1).toISOString();
-    const { ok, status, data } = await getEvents(from, to);
-    if (status === 401) { window.location.href = '/login.html'; return; }
-
+    // 1. Make sure the calendar body exists
     let body = document.getElementById('calendar-body');
     if (!body) {
         body = document.createElement('div');
         body.id = 'calendar-body';
         document.getElementById('calendar').append(body);
     }
+
+    // 2. Show a loading message while we wait for the server
+    body.replaceChildren();
+    const loading = document.createElement('p');
+    loading.textContent = 'Loading events…';
+    body.append(loading);
+
+    // 3. Ask the server for the month
+    const from = new Date(year, month, 1).toISOString();
+    const to = new Date(year, month + 1, 1).toISOString();
+    const { ok, status, data } = await getEvents(from, to);
+    if (status === 401) { window.location.href = '/login.html'; return; }
+
+    // 4. The answer is back, so clear the loading message
     body.replaceChildren();
 
     if (!ok || !data) {
