@@ -5,7 +5,7 @@ let month = new Date().getMonth();   // 0-based
 
 async function renderMonth() {
     const from = new Date(year, month, 1).toISOString();
-    const to   = new Date(year, month + 1, 1).toISOString();
+    const to = new Date(year, month + 1, 1).toISOString();
     const { ok, status, data } = await getEvents(from, to);
     if (status === 401) { window.location.href = '/login.html'; return; }
 
@@ -52,10 +52,12 @@ async function renderMonth() {
         grid.append(document.createElement('div'));
     }
 
+    const todayKey = new Date().toLocaleDateString('en-CA');
     for (let d = 1; d <= daysInMonth; d++) {
         const key = `${monthKey}-${String(d).padStart(2, '0')}`;
         const cell = document.createElement('div');
         cell.className = 'day';
+        if (key === todayKey) cell.classList.add('today');
 
         const num = document.createElement('div');
         num.className = 'day-num';
@@ -89,6 +91,12 @@ async function renderMonth() {
         }
 
         grid.append(cell);
+    }
+
+    // Pad the last week so the grid ends on a full row
+    const trailing = (7 - ((firstDay + daysInMonth) % 7)) % 7;
+    for (let i = 0; i < trailing; i++) {
+        grid.append(document.createElement('div'));
     }
 
     body.append(grid);
