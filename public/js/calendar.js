@@ -51,6 +51,43 @@ async function renderMonth() {
         byDay.get(key).push(ev);
     }
 
+    function showDay(key) {
+        const list = document.querySelector('#upcoming-events .event-list');
+        const heading = document.querySelector('#upcoming-events h2');
+        list.replaceChildren();
+
+        // "Events Today" for today, otherwise the date itself
+        const isToday = key === new Date().toLocaleDateString('en-CA');
+        heading.textContent = isToday
+            ? 'Events Today'
+            : new Date(`${key}T00:00:00`).toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' });
+
+        const events = byDay.get(key) ?? [];
+
+        if (events.length === 0) {
+            const p = document.createElement('p');
+            p.textContent = 'Nothing scheduled.';
+            list.append(p);
+        }
+
+        for (const ev of events) {
+            const row = document.createElement('div');
+            row.className = 'today-event';
+
+            const dot = document.createElement('span');
+            dot.className = 'dot';
+            dot.style.background = ev.color;
+
+            const time = ev.allDay
+                ? 'All day'
+                : new Date(ev.start).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+
+            row.append(dot, `${time}  ${ev.title} · ${ev.owner}`);
+            list.append(row);
+        }
+    }
+
+
     // Grid layout
     const firstDay = new Date(year, month, 1).getDay();           // blank cells before the 1st
     const daysInMonth = new Date(year, month + 1, 0).getDate();   // last day of this month
@@ -68,6 +105,12 @@ async function renderMonth() {
         const cell = document.createElement('div');
         cell.className = 'day';
         if (key === todayKey) cell.classList.add('today');
+
+        cell.addEventListener('click', () => {
+            document.querySelector('.day.selected')?.classList.remove('selected');
+            cell.classList.add('selected');
+            showDay(key);
+        });
 
         const num = document.createElement('div');
         num.className = 'day-num';
@@ -112,36 +155,10 @@ async function renderMonth() {
     body.append(grid);
 
 
-    // Events Today (only when viewing the current month)
+        // Show today's events (or the 1st when browsing another month)
     const today = new Date();
-    if (year === today.getFullYear() && month === today.getMonth()) {
-        const todays = byDay.get(today.toLocaleDateString('en-CA')) ?? [];
-        const list = document.querySelector('#upcoming-events .event-list');
-        list.replaceChildren();
-
-        if (todays.length === 0) {
-            const p = document.createElement('p');
-            p.textContent = 'Nothing scheduled today.';
-            list.append(p);
-        }
-
-        for (const ev of todays) {
-            const row = document.createElement('div');
-            row.className = 'today-event';
-
-            const dot = document.createElement('span');
-            dot.className = 'dot';
-            dot.style.background = ev.color;
-
-            const time = ev.allDay
-                ? 'All day'
-                : new Date(ev.start).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-
-            row.append(dot, `${time}  ${ev.title} · ${ev.owner}`);
-            list.append(row);
-        }
-    }
-
+    const isCurrent = year === today.getFullYear() && month === today.getMonth();
+    showDay(isCurrent ? today.toLocaleDateString('en-CA') : `${monthKey}-01`);
 
 
     // Notices for connections that failed
