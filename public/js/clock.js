@@ -13,6 +13,11 @@ export function updateClock() {
     let m = today.getMinutes();
     let s = today.getSeconds();
     let time = document.getElementById('time');
-    time.textContent = `${h}:${m}:${s}`;
+    time.textContent = `${h}:${checkTime(m)}:${checkTime(s)}`;
     setTimeout(updateClock, 1000)
+}
+
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};
+  return i;
 }
