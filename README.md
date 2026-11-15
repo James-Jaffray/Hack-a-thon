@@ -4,6 +4,8 @@
 
 Built at the November 2026 hackathon. Theme: **Refinement**.
 
+<!-- Add a screenshot or GIF here once the demo run-through is done: docs/screenshot.png -->
+
 ## Why we built it
 
 We surveyed fellow students and developers before writing any code (full notes in [docs/research.md](docs/research.md)):

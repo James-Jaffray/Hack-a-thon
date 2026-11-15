@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
     }
 
     const connections = await sql`
-    SELECT id, provider, credential, display_name, enabled_calendars, is_enabled
+    SELECT id, provider, credential, display_name, owner_name, enabled_calendars, is_enabled
     FROM calendar_connections
     WHERE user_id = ${req.session.userId}`;
 
@@ -41,7 +41,8 @@ router.get('/', async (req, res) => {
     results.forEach((r, i) => {
         const c = connections[i];
         if (r.status === 'fulfilled') {
-            events.push(...r.value);
+            const owner = c.owner_name || c.display_name;
+            events.push(...r.value.map((e) => ({ ...e, owner })));
         } else {
             console.warn(`Connection ${c.id} (${c.provider}) failed:`, r.reason.message);
             errors.push({

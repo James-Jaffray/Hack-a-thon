@@ -7,7 +7,7 @@ import { listGoogleCalendars } from '../lib/google.js';
 const router = Router();
 router.use(requireAuth);
 
-// GET /api/connections -> [{ id, provider, displayName, createdAt }]
+// GET /api/connections -> [{ id, provider, displayName, ownerName, createdAt, isEnabled }]
 // Never select `credential`: it holds refresh tokens.
 router.get('/', async (req, res) => {
     const rows = await sql`
@@ -15,6 +15,7 @@ router.get('/', async (req, res) => {
         id,
         provider,
         display_name AS "displayName",
+        owner_name AS "ownerName",
         created_at AS "createdAt",
         is_enabled AS "isEnabled"
     FROM calendar_connections
@@ -24,7 +25,7 @@ router.get('/', async (req, res) => {
     res.json(rows);
 });
 
-// PATCH /api/connections/:id
+// PATCH /api/connections/:id  body: { isEnabled?, ownerName? }
 router.patch('/:id', async (req, res) => {
     const id = Number(req.params.id);
 
@@ -32,20 +33,27 @@ router.patch('/:id', async (req, res) => {
         return res.status(400).json({ error: 'Bad id' });
     }
 
-    const { isEnabled } = req.body ?? {};
+    const { isEnabled, ownerName } = req.body ?? {};
 
-    if (typeof isEnabled !== 'boolean') {
-        return res.status(400).json({
-            error: 'isEnabled must be true or false'
-        });
+    if (isEnabled !== undefined && typeof isEnabled !== 'boolean') {
+        return res.status(400).json({ error: 'isEnabled must be true or false' });
     }
+    if (ownerName !== undefined && typeof ownerName !== 'string') {
+        return res.status(400).json({ error: 'ownerName must be text' });
+    }
+    if (isEnabled === undefined && ownerName === undefined) {
+        return res.status(400).json({ error: 'Nothing to update' });
+    }
+
+    const owner = ownerName === undefined ? null : (ownerName.trim().slice(0, 40) || null);
 
     const [row] = await sql`
         UPDATE calendar_connections
-        SET is_enabled = ${isEnabled}
+        SET is_enabled = COALESCE(${isEnabled ?? null}, is_enabled),
+            owner_name = CASE WHEN ${ownerName !== undefined} THEN ${owner} ELSE owner_name END
         WHERE id = ${id}
         AND user_id = ${req.session.userId}
-        RETURNING id, is_enabled AS "isEnabled"
+        RETURNING id, is_enabled AS "isEnabled", owner_name AS "ownerName"
     `;
 
     if (!row) {
@@ -69,9 +77,9 @@ router.delete('/:id', async (req, res) => {
     res.status(204).end();
 });
 
-// POST /api/connections/apple  body: { icsUrl, displayName }
+// POST /api/connections/apple  body: { icsUrl, displayName, ownerName }
 router.post('/apple', async (req, res) => {
-    const { icsUrl, displayName } = req.body ?? {};
+    const { icsUrl, displayName, ownerName } = req.body ?? {};
 
     const url = normalizeIcsUrl(icsUrl);
     if (!url) {
@@ -80,6 +88,11 @@ router.post('/apple', async (req, res) => {
     const name = typeof displayName === 'string' && displayName.trim()
         ? displayName.trim().slice(0, 60)
         : 'Apple Calendar';
+
+    // Who is this calendar for? Falls back to the calendar name.
+    const owner = typeof ownerName === 'string' && ownerName.trim()
+        ? ownerName.trim().slice(0, 40)
+        : name;
 
     // Prove the link works by fetching one day (this also runs the safety checks)
     try {
@@ -92,10 +105,10 @@ router.post('/apple', async (req, res) => {
     }
 
     const [row] = await sql`
-    INSERT INTO calendar_connections (user_id, provider, credential, display_name)
-    VALUES (${req.session.userId}, 'apple', ${url.href}, ${name})
+    INSERT INTO calendar_connections (user_id, provider, credential, display_name, owner_name)
+    VALUES (${req.session.userId}, 'apple', ${url.href}, ${name}, ${owner})
     ON CONFLICT (user_id, provider, credential) DO NOTHING
-    RETURNING id, provider, display_name AS "displayName"`;
+    RETURNING id, provider, display_name AS "displayName", owner_name AS "ownerName"`;
 
     if (!row) return res.status(409).json({ error: 'That calendar is already connected' });
     res.status(201).json(row);
