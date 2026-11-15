@@ -6,31 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/script.js"></script>
+    <script type="module" src="js/script.js"></script>
 </head>
 
 <body>
-    <form action="https://www.google.com/search" class="searchform" method="get" name="searchform" target="_blank">
-        <input name="sitesearch" type="hidden">
-        <input autocomplete="on" class="form-control search" name="q" placeholder="Search in example.com"
-            required="required" type="text">
-        <button class="button" type="submit">Search</button>
-    </form>
-    <div class="flex-container" id="shortcut-container">
-        <!-- shortcut item template -->
-        <template>
-            <div class="shortcut">
-                <a href="https://google.com" target="_blank">
-                    <img src="" alt="shortcut icon" class="shortcut-icon">
-                </a>
-                <p class="shortcut-name">shortcut 1</p>
-            </div>
-        </template>
-    </div>
-    <div id="calendar-calendar">
-        <iframe src="https://calendar.google.com/calendar/u/0/r" style="border:0; width:800; height:600; frameborder:0;"
-            scrolling="no"></iframe>
-    </div>
     <!-- User preferences/dashboard -->
     <span>
         <a href="dashboard.html">
@@ -42,14 +21,7 @@
         <!-- Time, Date, Greeting -->
         <div>
             <h1 id="greeting"></h1>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <link rel="stylesheet" href="css/style.css">
-        <script type="module" src="js/script.js"></script>
-    </head>
-    <body>
+        </div>
         <form action="https://www.google.com/search" class="searchform" method="get" name="searchform" target="_blank">
             <input name="sitesearch" type="hidden">
             <input autocomplete="on" class="form-control search" name="q" placeholder="Search in example.com" required="required"  type="text">
@@ -109,22 +81,6 @@
             </div>
 
             <div class="event-list">
-                <article class="event">
-                    <div class="event-details">
-                        <p id="event-date"></p>
-                        <p id="event-name"></p>
-                        <p id="event-time"></p>
-                    </div>
-                </article>
-
-                <article class="event">
-                    <div class="event-details">
-                        <p id="event-date"></p>
-                        <p id="event-name"></p>
-                        <p id="event-time"></p>
-                    </div>
-                </article>
-
                 <article class="event">
                     <div class="event-details">
                         <p id="event-date"></p>
