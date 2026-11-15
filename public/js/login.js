@@ -64,6 +64,8 @@ const loginError = document.querySelector('#login-error');
 loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
+    loginError.textContent = '';
+
     const email = loginEmail.value;
     const password = loginPassword.value;
 
