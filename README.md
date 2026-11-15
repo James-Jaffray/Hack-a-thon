@@ -27,6 +27,7 @@ Refinement, for us, means fewer tabs and fewer steps: one page, every calendar, 
 - Five editable shortcut buttons that follow your account
 - Weather for Edmonton
 - Disconnect a calendar at any time
+- Optional Chrome new-tab extension that opens your hub on every new tab, plus a Switch hub button and remembered hub names
 
 ## Quick start
 
@@ -57,6 +58,19 @@ pnpm dev                      # server restarts on every save; refresh the brows
 
 **Reset the database to the seed data:** `docker compose down -v`, then `docker compose up -d --build`.
 
+## New-tab extension (optional)
+
+Make the hub your Chrome new tab page, so your calendar is zero steps away:
+
+1. Start the app (`pnpm dev` or Docker) so it is running on http://localhost:3000.
+2. Open `chrome://extensions` and turn on **Developer mode**.
+3. Click **Load unpacked** and choose the `extension/` folder.
+4. Open a new tab. You land on your hub, and stay signed in for 7 days.
+
+Use **Switch hub** (top of the main page) to move between hubs. The login page remembers the names of your recent hubs on that browser, but never passwords.
+
+The extension is only a redirect to `http://localhost:3000/index.html`, so it works while the app is running on your machine. Once the hub is hosted, change that one URL in `extension/newtab.js`.
+
 ## Tech stack
 
 | Layer | Choice |
@@ -73,6 +87,7 @@ lib/        Calendar fetching and normalizing (google.js, ics.js)
 db/         schema.sql and seed.sql
 public/     The website: pages, js/, css/
 docs/       Research notes
+extension/  Chrome new-tab extension (load unpacked)
 ```
 
 ## How it works
