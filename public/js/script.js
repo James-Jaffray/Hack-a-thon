@@ -1,4 +1,6 @@
 import { getCurrentWeather } from "./weather.js";
+import { createShortcuts } from "./shortcuts.js";
+import { updateClock, getDate } from "./clock.js";
 
 /*weatherJs.find({search: 'San Francisco, CA', degreeType: 'F'}, function(err, result) {
   if(err) console.log(err);
@@ -8,23 +10,7 @@ import { getCurrentWeather } from "./weather.js";
 
 //getLocation();
 getCurrentWeather( 53.5461, -113.4938)
-console.log("hello");
-const shortcutCont = document.getElementById('shortcut-container');
 
-function createShortcuts() {
-    let container = document.createElement('div');
-    container.classList.add('shortcut');
-    
-    let link = document.createElement('a');
-    link.href = "";
-    let image = document.createElement('img');
-    image.src = "";
-    image.alt = "shortcut image";
-    link.append(image);
+getDate();
+updateClock();
 
-    let name = document.createElement('p');
-
-    container.append(link, name);
-
-    shortcutCont.append(container);
-}
