@@ -4,7 +4,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import authRoutes from './api/auth.js';
 import shortcutsRoutes from './api/shortcuts.js';
-
+import googleRoutes from './api/google.js';
+import eventsRoutes from './api/events.js';
 
 
 
@@ -27,8 +28,9 @@ app.use(cookieSession({
 
 app.use('/api/auth', authRoutes);
 app.use('/api/shortcuts', shortcutsRoutes);
-
+app.use('/auth/google', googleRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/api/events', eventsRoutes)
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Running at http://localhost:${port}`));
