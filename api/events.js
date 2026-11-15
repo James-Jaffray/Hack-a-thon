@@ -18,12 +18,15 @@ router.get('/', async (req, res) => {
     }
 
     const connections = await sql`
-    SELECT id, provider, credential, display_name, enabled_calendars
+    SELECT id, provider, credential, display_name, owner_name, enabled_calendars, is_enabled
     FROM calendar_connections
     WHERE user_id = ${req.session.userId}`;
 
-        // allSettled: one broken connection must not take down the others
+    // allSettled: one broken connection must not take down the others
     const results = await Promise.allSettled(connections.map((c) => {
+        if (!c.is_enabled) {
+            return Promise.resolve([]);
+        }
         if (c.provider === 'google') {
             return fetchGoogleEvents(c.credential, from.toISOString(), to.toISOString(), c.enabled_calendars);
         }
@@ -38,13 +41,15 @@ router.get('/', async (req, res) => {
     results.forEach((r, i) => {
         const c = connections[i];
         if (r.status === 'fulfilled') {
-            events.push(...r.value);
+            const owner = c.owner_name || c.display_name;
+            events.push(...r.value.map((e) => ({ ...e, owner })));
         } else {
             console.warn(`Connection ${c.id} (${c.provider}) failed:`, r.reason.message);
             errors.push({
                 connectionId: c.id,
                 provider: c.provider,
                 displayName: c.display_name,
+                ownerName: c.owner_name,
                 needsReconnect: Boolean(r.reason.needsReconnect),
             });
         }

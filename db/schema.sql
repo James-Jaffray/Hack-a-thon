@@ -18,6 +18,8 @@ CREATE TABLE calendar_connections (
     credential TEXT NOT NULL,
     display_name TEXT,
     enabled_calendars JSONB,
+    is_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    owner_name TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (user_id, provider, credential)
 );

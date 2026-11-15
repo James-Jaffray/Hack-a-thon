@@ -4,17 +4,27 @@ let year = new Date().getFullYear();
 let month = new Date().getMonth();   // 0-based
 
 async function renderMonth() {
-    const from = new Date(year, month, 1).toISOString();
-    const to   = new Date(year, month + 1, 1).toISOString();
-    const { ok, status, data } = await getEvents(from, to);
-    if (status === 401) { window.location.href = '/login.html'; return; }
-
+    // 1. Make sure the calendar body exists
     let body = document.getElementById('calendar-body');
     if (!body) {
         body = document.createElement('div');
         body.id = 'calendar-body';
         document.getElementById('calendar').append(body);
     }
+
+    // 2. Show a loading message while we wait for the server
+    body.replaceChildren();
+    const loading = document.createElement('p');
+    loading.textContent = 'Loading events…';
+    body.append(loading);
+
+    // 3. Ask the server for the month
+    const from = new Date(year, month, 1).toISOString();
+    const to = new Date(year, month + 1, 1).toISOString();
+    const { ok, status, data } = await getEvents(from, to);
+    if (status === 401) { window.location.href = '/login.html'; return; }
+
+    // 4. The answer is back, so clear the loading message
     body.replaceChildren();
 
     if (!ok || !data) {
@@ -52,10 +62,12 @@ async function renderMonth() {
         grid.append(document.createElement('div'));
     }
 
+    const todayKey = new Date().toLocaleDateString('en-CA');
     for (let d = 1; d <= daysInMonth; d++) {
         const key = `${monthKey}-${String(d).padStart(2, '0')}`;
         const cell = document.createElement('div');
         cell.className = 'day';
+        if (key === todayKey) cell.classList.add('today');
 
         const num = document.createElement('div');
         num.className = 'day-num';
@@ -71,7 +83,7 @@ async function renderMonth() {
             const time = ev.allDay
                 ? 'All day'
                 : new Date(ev.start).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-            line.title = `${time}  ${ev.title}`;   // full text on hover
+            line.title = `${time}  ${ev.title} (${ev.owner})`;   // full text + who it belongs to
 
             const dot = document.createElement('span');
             dot.className = 'dot';
@@ -89,6 +101,12 @@ async function renderMonth() {
         }
 
         grid.append(cell);
+    }
+
+    // Pad the last week so the grid ends on a full row
+    const trailing = (7 - ((firstDay + daysInMonth) % 7)) % 7;
+    for (let i = 0; i < trailing; i++) {
+        grid.append(document.createElement('div'));
     }
 
     body.append(grid);
@@ -119,7 +137,7 @@ async function renderMonth() {
                 ? 'All day'
                 : new Date(ev.start).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 
-            row.append(dot, `${time}  ${ev.title}`);
+            row.append(dot, `${time}  ${ev.title} · ${ev.owner}`);
             list.append(row);
         }
     }
@@ -132,7 +150,7 @@ async function renderMonth() {
         p.textContent = `${err.displayName} needs attention. `;
         if (err.needsReconnect) {
             const a = document.createElement('a');
-            a.href = '/auth/google';
+            a.href = `/auth/google?owner=${encodeURIComponent(err.ownerName ?? '')}`;
             a.textContent = 'Reconnect Google';
             p.append(a);
         }
