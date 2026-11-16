@@ -10,6 +10,7 @@
     <script type="module" src="js/dashboard.js"></script>
     <script type="module" src="js/connections.js"></script>
     <script type="module" src="js/hub-bar.js"></script>
+    <script type="module" src="js/shortcutCreate.js"></script>
 </head>
 
 <body>
@@ -24,6 +25,26 @@
     <main class="dashboard-container">
         <section>
             <h2>Themes</h2>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Weather Display</h2>
+
+            <h3>Toggles</h3>
+            <label for="temperature-check">Display Temperature</label>
+            <input type="checkbox" name="temperature-check" id="temperature-check" class="checkboxes" checked>
+            <br>
+            <label for="feels-like-check">Display Feels Like Temperature</label>
+            <input type="checkbox" name="feels-like-check" id="feels-like-check" class="checkboxes" checked>
+            <br>
+            <label for="condition-check">Display Condition</label>
+            <input type="checkbox" name="condition-check" id="condition-check", class="checkboxes" checked>
+            <br>
+            <label for="humidity-check">Display Humidity</label>
+            <input type="checkbox" name="humidity-check" id="humidity-check", class="checkboxes" checked>
+
         </section>
 
         <hr>
