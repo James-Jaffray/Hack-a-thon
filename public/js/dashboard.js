@@ -16,6 +16,57 @@ logoutButton.addEventListener('click', async () => {
     }
 });
 
+// ---- Weather ----
+
+function reverseToggle(item) {
+    localStorage.setItem(item, !localStorage.getItem(item));
+}
+
+const getTempToggle = localStorage.getItem("isTempToggled");
+const getFeelsLikeToggle = localStorage.getItem("isFeelsLikeToggled");
+const getConditionToggle = localStorage.getItem("isConditionToggled");
+const getHumidityToggle = localStorage.getItem("isHumidityToggled");
+
+const tempToggle = document.getElementById('temperature-check');
+const feelsLikeToggle = document.getElementById('feels-like-check');
+const conditionToggle = document.getElementById('condition-check');
+const humidityToggle = document.getElementById('humidity-check');
+
+if (getTempToggle == null) localStorage.setItem("isTempToggled", tempToggle.checked);
+if (getFeelsLikeToggle == null) localStorage.setItem("isFeelsLikeToggled", feelsLikeToggle.checked);
+if (getConditionToggle == null) localStorage.setItem("isConditionToggled", conditionToggle.checked);
+if (getHumidityToggle == null) localStorage.setItem("isHumidityToggled", humidityToggle.checked);
+
+tempToggle.addEventListener('click', () => {
+    localStorage.setItem("isTempToggled", tempToggle.checked);
+});
+
+feelsLikeToggle.addEventListener('click', () => {
+    localStorage.setItem("isFeelsLikeToggled", feelsLikeToggle.checked);
+});
+
+conditionToggle.addEventListener('click', () => {
+    localStorage.setItem("isConditionToggled", conditionToggle.checked);
+});
+
+humidityToggle.addEventListener('click', () => {
+    localStorage.setItem("isHumidityToggled", humidityToggle.checked);
+});
+
+window.addEventListener("load", () => {
+    tempToggle.checked = localStorage.getItem("isTempToggled") === "true";
+    feelsLikeToggle.checked = localStorage.getItem("isFeelsLikeToggled") === "true";
+    conditionToggle.checked = localStorage.getItem("isConditionToggled") === "true";
+    humidityToggle.checked = localStorage.getItem("isHumidityToggled") === "true";
+});
+
+/*function renderCheckboxesToMatch() {
+    tempToggle.checked = Boolean(getTempToggle);//localStorage.getItem("isTempToggled");
+    console.log(localStorage.getItem("isTempToggled"))
+}
+renderCheckboxesToMatch();*/
+
+
 // ---- Shortcuts ----
 const labelInput = document.querySelector('#shortcut-label');
 const linkInput = document.querySelector('#shortcut-link');

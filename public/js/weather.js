@@ -29,6 +29,11 @@ function testCoords() {
     console.log(`longitude: ${longitude}`);
 }
 
+const getTempToggle = localStorage.getItem("isTempToggled") === "true";
+const getFeelsLikeToggle = localStorage.getItem("isFeelsLikeToggled") === "true";
+const getConditionToggle = localStorage.getItem("isConditionToggled") === "true";
+const getHumidityToggle = localStorage.getItem("isHumidityToggled") === "true";
+
 const WEATHER_CODES = {
     0: 'Clear sky', 1: 'Mainly clear', 2: 'Partly cloudy', 3: 'Overcast',
     45: 'Fog', 48: 'Fog',
@@ -66,14 +71,19 @@ export async function getCurrentWeather(latitude, longitude) {
             sessionStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), current }));
         }
 
-        document.getElementById('Tempature').textContent = `Tempature: ${Math.round(current.temperature_2m)} °C`;
-        document.getElementById('feels-like').textContent = `Feels Like: ${Math.round(current.apparent_temperature)} °C`;
-        document.getElementById('Condition').textContent = `Condition: ${WEATHER_CODES[current.weather_code] ?? 'Unknown'}`;
-        document.getElementById('Humidity').textContent = `Humidity: ${current.relative_humidity_2m}%`;
-
+        renderTemp(document.getElementById('Tempature'), getTempToggle, current.temperature_2m);
+        renderFeelsLike(document.getElementById('feels-like'), getFeelsLikeToggle, current.apparent_temperature);
+        renderCondition(document.getElementById('Condition'), getConditionToggle, WEATHER_CODES[current.weather_code] ?? 'Unknown');
+        renderHumidity(document.getElementById('Humidity'), getHumidityToggle, current.relative_humidity_2m);
+        
         return current;
     } catch (error) {
         console.error('Failed to fetch weather data:', error);
         document.getElementById('Condition').textContent = 'Weather unavailable';
     }
 }
+
+const renderTemp = (para, show, currentTemp) => show ? para.textContent = `Temperature: ${currentTemp} °C` : para.textContent = '';
+const renderFeelsLike = (para, show, feelsLike) => show ? para.textContent = `Feels Like ${feelsLike} °C` : para.textContent = '';
+const renderCondition = (para, show, condition) => show ? para.textContent = `Condition: ${condition}` : para.textContent = '';
+const renderHumidity = (para, show, humidity) => show ? para.textContent = `Humidity ${humidity}%` : para.textContent = '';
