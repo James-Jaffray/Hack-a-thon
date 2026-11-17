@@ -37,8 +37,6 @@
 
         <section>
             <h2>Weather Display</h2>
-
-            <h3>Toggles</h3>
             <fieldset>
                 <legend>Toggles</legend>
                 <p>The same for everyone in the hub. Only the hub owner can change these.</p>
@@ -55,29 +53,54 @@
                 <input type="checkbox" name="humidity-check" id="humidity-check" class="checkboxes" checked>
                 <br>
                 <label for="wind-check">Display Wind</label>
-                <input type="checkbox" name="wind-check" id="wind-check" class="checkboxes" checked>
+                <input type="checkbox" name="wind-check" id="wind-check" class="checkboxes">
                 <br>
                 <label for="forecast-btn-check">Display Forecast Button</label>
                 <input type="checkbox" name="forecast-btn-check" id="forecast-btn-check" class="checkboxes" checked>
+                <br>
+                <label for="weather-icon-check">Display Weather icon</label>
+                <input type="checkbox" name="weather-icon-check" id="weather-icon-check" class="checkboxes" checked>
             </fieldset>
 
             <fieldset>
                 <legend>Units</legend>
-                <label for="tempature-unit">Tempature Unit</label>
-                <select name="tempature-unit" id="tempature-unit">
-                    <option value="C">
-                        Celcius
-                    </option>
-                    <option value="F">
-                        Fahrenheit
-                    </option>
-                    <option value="K">
-                        Kelvin
-                    </option>
-                </select>
+                <fieldset>
+                    <legend>Tempature Units</legend>
+                    <label for="celcius-check" class="radio-label">Celcius</label>
+                    <input type="radio" name="tempature-unit" id="celcius-check" value="C" checked>
+                    <br>
+                    <label for="fahrenheit-check" class="radio-label">Fahrenheit</label>
+                    <input type="radio" name="tempature-unit" id="fahrenheit-check" value="F">
+                    <br>
+                    <label for="kelvin-check" class="radio-label">Kelvin</label>
+                    <input type="radio" name="tempature-unit" id="kelvin-check" value="K">
+                    <br>
+                    <label for="show-decimal">Show decimals in Tempatures</label>
+                    <input type="checkbox" name="show-decimal" id="show-decimal" class="checkboxes">
+                </fieldset>
+                <fieldset>
+                    <legend>Speed Units</legend>
+                    <label for="kmh-check" class="radio-label">Kilometers per hour (km/h)</label>
+                    <input type="radio" name="speed-unit" id="kmh-check" value="kmh" checked>
+                    <br>
+                    <label for="ms-check" class="radio-label">Meters per second (m/s)</label>
+                    <input type="radio" name="speed-unit" id="ms-check" value="ms">
+                    <br>
+                    <label for="mph-check" class="radio-label">Miles per hour (mph)</label>
+                    <input type="radio" name="speed-unit" id="mph-check" value="mph">
+                    <br>
+                    <label for="knots-check" class="radio-label">Knots</label>
+                    <input type="radio" name="speed-unit" id="knots-check" value="knots">
+                </fieldset>
+                <fieldset>
+                    <legend>Precipitation Units</legend>
+                    <label for="mm-check" class="radio-label">Millimeter (mm)</label>
+                    <input type="radio" name="percip-unit" id="mm-check" value="mm" checked>
+                    <br>
+                    <label for="in-check" class="radio-label">Inches</label>
+                    <input type="radio" name="percip-unit" id="in-check" value="in">
+                </fieldset>
                 <br>
-                <label for="show-decimal">Show decimals in Tempatures</label>
-                <input type="checkbox" name="show-decimal" id="show-decimal" class="checkboxes">
             </fieldset>
 
         </section>
