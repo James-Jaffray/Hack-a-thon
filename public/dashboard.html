@@ -39,19 +39,75 @@
             <h2>Weather Display</h2>
 
             <h3>Toggles</h3>
-            <p>The same for everyone in the hub. Only the hub owner can change these.</p>
-            <label for="temperature-check">Display Temperature</label>
-            <input type="checkbox" name="temperature-check" id="temperature-check" class="checkboxes" checked>
-            <br>
-            <label for="feels-like-check">Display Feels Like Temperature</label>
-            <input type="checkbox" name="feels-like-check" id="feels-like-check" class="checkboxes" checked>
-            <br>
-            <label for="condition-check">Display Condition</label>
-            <input type="checkbox" name="condition-check" id="condition-check", class="checkboxes" checked>
-            <br>
-            <label for="humidity-check">Display Humidity</label>
-            <input type="checkbox" name="humidity-check" id="humidity-check", class="checkboxes" checked>
+            <fieldset>
+                <legend>Toggles</legend>
+                <p>The same for everyone in the hub. Only the hub owner can change these.</p>
+                <label for="temperature-check">Display Temperature</label>
+                <input type="checkbox" name="temperature-check" id="temperature-check" class="checkboxes" checked>
+                <br>
+                <label for="feels-like-check">Display Feels Like Temperature</label>
+                <input type="checkbox" name="feels-like-check" id="feels-like-check" class="checkboxes" checked>
+                <br>
+                <label for="condition-check">Display Condition</label>
+                <input type="checkbox" name="condition-check" id="condition-check" class="checkboxes" checked>
+                <br>
+                <label for="humidity-check">Display Humidity</label>
+                <input type="checkbox" name="humidity-check" id="humidity-check" class="checkboxes" checked>
+                <br>
+                <label for="wind-check">Display Wind</label>
+                <input type="checkbox" name="wind-check" id="wind-check" class="checkboxes" checked>
+                <br>
+                <label for="forecast-btn-check">Display Forecast Button</label>
+                <input type="checkbox" name="forecast-btn-check" id="forecast-btn-check" class="checkboxes" checked>
+            </fieldset>
 
+            <fieldset>
+                <legend>Units</legend>
+                <label for="tempature-unit">Tempature Unit</label>
+                <select name="tempature-unit" id="tempature-unit">
+                    <option value="C">
+                        Celcius
+                    </option>
+                    <option value="F">
+                        Fahrenheit
+                    </option>
+                    <option value="K">
+                        Kelvin
+                    </option>
+                </select>
+                <br>
+                <label for="show-decimal">Show decimals in Tempatures</label>
+                <input type="checkbox" name="show-decimal" id="show-decimal" class="checkboxes">
+            </fieldset>
+
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Clock Display</h2>
+
+            <label for="show-clock">Show Clock</label>
+            <input type="checkbox" name="show-clock" id="show-clock" class="checkboxes" checked>
+            <br>
+            <label for="clock-type">Clock Type</label>
+            <select name="clock-type" id="clock-type">
+                <option value="24Hour">
+                    24 Hour Clock
+                </option>
+                <option value="12Hour">
+                    12 Hour Clock
+                </option>
+            </select>
+            <br>
+            <label for="show-seconds">Show seconds in clock</label>
+            <input type="checkbox" name="show-seconds" id="show-seconds" class="checkboxes">
+            <br>
+            <label for="show-milli">Show milliseconds in clock</label>
+            <input type="checkbox" name="show-seconds" id="show-milli" class="checkboxes">
+            <br>
+            <label for="clock-timezone">Clock timezone</label>
+            <select name="clock-timezone" id="clock-timezone"></select>
         </section>
 
         <hr>

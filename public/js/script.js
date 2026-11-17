@@ -1,9 +1,9 @@
-import { getCurrentWeather, fillForecast } from "./weather.js";
+import { getCurrentWeather } from "./weather.js";
 import { renderShortcuts, shortcuts } from "./shortcuts.js";
 import { updateClock, getDate } from "./clock.js";
 
 //getLocation();
-getCurrentWeather( 53.5461, -113.4938);
+getCurrentWeather(53.5461, -113.4938);
 
 getDate();
 updateClock();
@@ -22,4 +22,4 @@ exitForcestBtn.addEventListener('click', () => {
   forecastModal.style.display = 'none';
 });
 
-fillForecast();
+//fillForecast(53.5461, -113.4938);

@@ -230,6 +230,42 @@ input[type="checkbox"] { height: auto; cursor: pointer; accent-color: var(--acce
     display: flex;
     flex-direction: column;
 }
+
+.modal {
+    z-index: 1;
+    width: auto;
+    height: auto;
+    overflow: auto;
+    background-color: rgb(0 0 0 / 0.5);
+    border-radius: 1rem;
+    padding: 0.937rem 0.937rem 0.937rem 0.937rem;
+    box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.2), 0 0.375rem 1.25rem 0 rgba(0, 0, 0, 0.19);
+    opacity: 90%;
+}
+
+#forecastModal {
+    display: none;
+    position: absolute;
+    left: 4%;
+    top: 3%;
+    width: 90%;
+    height: 90%;
+    background-color: black;
+}
+
+.forcast-card {
+    background-color: rgb(75, 69, 69);
+    color: white;
+    padding: 2rem 2rem 2rem 2rem;
+    opacity: 100% !important;
+}
+
+.exitModalBtns {
+    background-color: red;
+    color: white;
+    text-align: right;
+}
+
 /* A long list scrolls inside its card, never the page */
 #upcoming-events {
     max-height: 100%;
