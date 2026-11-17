@@ -19,17 +19,20 @@ export async function renderShortcuts() {
         return;
     }
     for (var i = 0; i < result.data.length; i++) {
-        console.log(result.data[i].label);
         let container = document.createElement('div');
         container.classList.add('shortcut');
         
         let link = document.createElement('a');
         link.href = result.data[i].url;
         link.target = '_blank';
+        link.setAttribute('aria-label', result.data[i].label);
+        // The site's own favicon; falls back to the first letter of the label
+        const letter = result.data[i].label.trim().charAt(0).toUpperCase();
         let image = document.createElement('img');
-        image.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQy08XR58e5GTgTHWJbenl1yXy7nmgTBJ1STzQdUiB4gQ&s=10";
-        image.alt = "shortcut image";
+        image.alt = '';
         image.classList.add('shortcut-icon');
+        image.addEventListener('error', () => image.replaceWith(letter));
+        try { image.src = new URL('/favicon.ico', result.data[i].url).href; } catch { image.replaceWith(letter); }
         link.append(image);
 
         let name = document.createElement('p');

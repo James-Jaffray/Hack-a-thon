@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your hubs</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="js/hub-picker.js"></script>
+</head>
+
+<body>
+    <main>
+        <section id="auth-container">
+
+            <header>
+                <h1>CalHub</h1>
+            </header>
+
+            <p>
+                Signed in as <strong id="account"></strong>
+                <button type="button" id="logout-button">Log out</button>
+            </p>
+
+            <div id="your-hubs" hidden>
+                <h2>Your hubs</h2>
+                <ul id="hub-list"></ul>
+            </div>
+
+            <form id="create-hub-form">
+                <h2>Create a hub</h2>
+                <p>You will be its owner. Invite people from the dashboard once it exists. To join someone else's
+                    hub, ask its owner for an invite link.</p>
+
+                <label for="hub-name">Hub name</label>
+                <input type="text" id="hub-name" name="name" maxlength="40" required>
+
+                <button type="submit">Create hub</button>
+
+                <p id="create-hub-error" role="alert"></p>
+            </form>
+
+        </section>
+    </main>
+</body>
+
+</html>

@@ -17,8 +17,9 @@ services:
     restart: unless-stopped
     depends_on: [db]
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"   # this machine only; the public way in is the tunnel below
     environment:
+      NODE_ENV: ${NODE_ENV:-development}
       DB_HOST: db
       DB_PORT: 5432
       DB_NAME: ${DB_NAME}
@@ -29,6 +30,18 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-}
+
+  # Cloudflare Tunnel: dials OUT to Cloudflare, so no router ports are opened.
+  # Only starts with the "tunnel" profile (COMPOSE_PROFILES=tunnel in the server's .env),
+  # so a plain `docker compose up` on a dev laptop skips it.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    profiles: [tunnel]
+    depends_on: [app]
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
 
 volumes:
   calhub-data:

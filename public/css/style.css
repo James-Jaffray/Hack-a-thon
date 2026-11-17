@@ -1,479 +1,403 @@
 :root {
-    /* colors */
-    --color-bg: #0a1d21;
-    --color-surface: #102a30;
-    --color-text: #e4f1f0;
-    --color-muted: #8fb2b3;
-    --color-primary: #2dd4bf;
-    --color-border: #1e4750;
+    /* Dark teal ramp; bright teal is the one accent */
+    --bg: #0a1d21;
+    --surface: #102a30;
+    --surface-weekend: #0e262b;
+    --surface-2: #15353c;
+    --hover: #1b434c;
+    --border: rgb(143 210 210 / 0.12);
+    --border-strong: rgb(143 210 210 / 0.22);
+    --text: #e4f1f0;
+    --text-2: #a9c8c8;
+    --muted: #7fa3a4;
+    --band: linear-gradient(135deg, #06262b 0%, #0f766e 100%);
+    --accent: #2dd4bf;
+    --danger: #f08a80;
+    --success: #7fd6a4;
 
-    /* spacing scale */
+    /* spacing scale (0.25rem grid) */
     --space-1: 0.25rem;
     --space-2: 0.5rem;
     --space-3: 1rem;
     --space-4: 1.5rem;
     --space-5: 2.5rem;
 
-    /* misc */
+    /* Sizes that follow the screen height smoothly instead of jumping at breakpoints */
+    --gap: clamp(0.75rem, 2.4dvh, 1.5rem);
+    --pad-card: clamp(0.75rem, 2.4dvh, 1.5rem);
+    --bar-h: clamp(3rem, 6dvh, 3.5rem);
+    --control-h: clamp(2.5rem, 5dvh, 2.75rem);
+
     --radius: 0.5rem;
-    --shadow: 0 1px 3px rgb(0 0 0 / 0.4);
+    --radius-card: 0.875rem;
+    --ease: cubic-bezier(0.2, 0, 0, 1);
+    --dur: 120ms;
     --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    color-scheme: dark;
 }
-
-
-
-.flex-container {
-    display: flex;
-    gap: 2rem;
-}
-
-.shortcut-icon {
-    border: 1px solid black;
-    border-radius: 50%;
-    width: 5rem;
-}
-
-
-/* Dashboard layout */
 
 body {
     margin: 0;
     font-family: var(--font);
-    background: var(--color-bg);
-    color: var(--color-text);
+    font-size: 0.875rem;
+    background: var(--bg);
+    color: var(--text);
 }
 
-.dashboard-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: white;
-    border-bottom: 1px solid #ddd;
-}
-
-.dashboard-nav a {
-    color: #333;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.dashboard-nav a:hover {
-    text-decoration: underline;
-}
-
-.dashboard-container {
-    max-width: 900px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
-}
-
-.dashboard-container section {
-    background-color: white;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-}
-
-.dashboard-container h2 {
-    margin-top: 0;
-}
-
-/* Calendar connections */
-
-#connected-calendars {
-    padding-left: 1.5rem;
-}
-
-#connected-calendars li {
-    margin-bottom: 1rem;
-}
-
-.google-calendars {
+/* Home page fits one screen: the calendar absorbs the leftover height */
+html:has(body.home) { overflow: hidden; }
+body.home {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin: 0.75rem 0 0 1.5rem;
+    overflow: hidden;
 }
+.band { flex: none; background: var(--band); }
+.top-bar,
+.band > header { width: 100%; }
 
-.google-calendars label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+h1, h2 { font-weight: 500; }
 
 /* Buttons and inputs */
-
 button {
     cursor: pointer;
-    padding: 0.45rem 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-input {
-    padding: 0.4rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-#apple-calendar-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    max-width: 450px;
-}
-
-#apple-calendar-form div {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-}
-
-#apple-calendar-error {
-    color: #c62828;
-}
-
-#apple-calendar-success {
-    color: #2e7d32;
-}
-
-.apple-options {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin: 0.75rem 0 0 1.5rem;
-}
-
-.apple-options label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* Aliases: calendar.css asks for these names, so it now picks up the theme */
-:root {
-    --surface: var(--color-surface);
-    --border: var(--color-border);
-    --muted: var(--color-muted);
-    --accent: var(--color-primary);
-}
-
-/* Buttons and inputs */
-button {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
+    height: 2rem;
+    padding: 0 0.75rem;
+    font: inherit;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 0.0625rem solid var(--border);
     border-radius: var(--radius);
+    transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-
-button:hover {
-    background: var(--color-bg);
-}
+button:hover { background: var(--hover); border-color: var(--border-strong); }
+button:active { transform: scale(0.98); }
 
 button[type="submit"] {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: #fff;
+    background: var(--text);
+    border-color: var(--text);
+    color: var(--bg);
+    font-weight: 500;
+}
+button[type="submit"]:hover { background: #fff; }
+
+input {
+    height: 2.25rem;
+    padding: 0 0.75rem;
+    font: inherit;
+    color: var(--text);
+    background: var(--bg);
+    border: 0.0625rem solid var(--border-strong);
+    border-radius: var(--radius);
+}
+input::placeholder { color: var(--muted); }
+input:not([type="submit"]) { cursor: text; } /* reset.css makes every input a pointer */
+input[type="checkbox"] { height: auto; cursor: pointer; accent-color: var(--accent); }
+
+:focus-visible {
+    outline: 0.125rem solid var(--accent);
+    outline-offset: 0.125rem;
 }
 
-input:not([type="submit"]) {
-    cursor: text;
+.icon-button {
+    width: 2rem;
+    padding: 0;
+    display: inline-grid;
+    place-items: center;
+    color: var(--text-2);
+    background: transparent;
+    border-color: transparent;
 }
+.icon-button svg { width: 1.125rem; height: 1.125rem; }
 
-/* reset.css makes every input a pointer */
+/* ---------- Home page ---------- */
+
+.top-bar,
+.band > header,
+.home-grid {
+    max-width: 90rem;
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+}
 
 /* Top bar */
 .top-bar {
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-2) var(--space-4);
-    background: var(--color-surface);
-    border-bottom: 1px solid var(--color-border);
+    height: var(--bar-h);
+    border-bottom: 0.0625rem solid var(--border);
 }
-
+.top-bar h1 { font-size: 1rem; margin-right: var(--space-2); }
 .top-bar a {
-    font-weight: 600;
+    color: var(--text-2);
     text-decoration: none;
+    transition: color var(--dur) var(--ease);
+}
+.top-bar a:hover { color: var(--text); }
+.top-bar .hub-label { color: var(--muted); margin-left: auto; }
+.top-bar .switch-hub { flex: none; white-space: nowrap; }
+.top-bar .hub-name {
+    font-weight: 500;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.top-bar .switch-hub {
-    margin-left: auto;
-}
-
-/* Header: greeting, shortcuts, clock */
-body>header {
+/* Clock and shortcuts */
+.band > header {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
-    gap: var(--space-3);
-    padding: var(--space-4);
+    gap: var(--space-4);
+    padding-block: clamp(0.75rem, 3dvh, 1.5rem) clamp(0.75rem, 2.4dvh, 1.5rem);
 }
 
-#date-time {
-    text-align: right;
-}
-
+#date { color: var(--text-2); font-size: 1rem; }
 #time {
-    font-size: 2rem;
-    font-weight: 600;
+    font-size: clamp(2rem, 6.5dvh, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
 }
 
-.shortcut {
-    text-align: center;
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
 }
-
+.shortcut { width: 4rem; text-align: center; }
+.shortcut a {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto var(--space-2);
+    background: var(--surface-2);
+    border: 0.0625rem solid var(--border);
+    border-radius: 0.75rem;
+    color: var(--text);
+    font-size: 1.125rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.shortcut a:hover { background: var(--hover); border-color: var(--border-strong); }
+.shortcut-icon { width: 1.5rem; height: 1.5rem; }
 .shortcut-name {
-    font-size: 0.8rem;
-    color: var(--color-muted);
+    font-size: 0.75rem;
+    color: var(--text-2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+#shortcut-container > p { color: var(--muted); }
 
-/* Two-column page layout */
+/* Page grid: the calendar leads, weather and today sit beside it */
 .home-grid {
     display: grid;
-    grid-template-columns: 20rem 1fr;
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    grid-template-rows: auto auto minmax(0, 1fr);
     grid-template-areas:
         "search   search"
-        "weather  calendar"
-        "events   calendar";
-    gap: var(--space-4);
+        "calendar weather"
+        "calendar events";
+    gap: var(--gap);
     align-items: start;
-    max-width: 75rem;
-    margin: 0 auto;
-    padding: 0 var(--space-4) var(--space-5);
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding-top: var(--gap);
+    padding-bottom: var(--gap);
 }
 
-#search {
-    grid-area: search;
-}
-
-#weather {
-    grid-area: weather;
-}
-
-#upcoming-events {
-    grid-area: events;
-}
-
+#search { grid-area: search; }
+#weather { grid-area: weather; }
+#upcoming-events { grid-area: events; }
 #calendar {
     grid-area: calendar;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
+#calendar-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+/* A long list scrolls inside its card, never the page */
+#upcoming-events {
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.event-list { overflow-y: auto; min-height: 0; }
 
-/* Cards */
 #weather,
 #upcoming-events,
 #calendar {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: var(--space-4);
+    background: var(--surface);
+    border: 0.0625rem solid var(--border);
+    border-radius: var(--radius-card);
+    padding: var(--pad-card);
 }
 
-.home-grid #calendar {
-    max-width: none;
-    margin: 0;
-}
-
-/* beats calendar.css */
-.home-grid h2 {
-    font-size: 1.125rem;
-    margin-bottom: var(--space-3);
-}
-
-.weather-details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-2);
-}
+.home-grid h2 { font-size: 1rem; }
+#calendar h2 { font-size: clamp(1.125rem, 2.4dvh, 1.25rem); }
+#calendar .calendar-heading { margin-bottom: clamp(0.5rem, 1.6dvh, 1rem); }
 
 /* Search */
-.searchform {
+.searchform { display: flex; gap: var(--space-2); }
+.searchform .search { flex: 1; height: var(--control-h); font-size: 1rem; background: var(--surface); }
+.searchform button { height: var(--control-h); padding-inline: var(--space-4); }
+
+/* Weather */
+.weather-header {
     display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-3);
+}
+#location { color: var(--muted); }
+.weather-details {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+        "temp cond"
+        "temp feels"
+        "temp hum";
+    column-gap: var(--space-3);
+    align-items: center;
+    color: var(--text-2);
+}
+#Tempature { grid-area: temp; font-size: 2.5rem; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
+#Condition { grid-area: cond; color: var(--text); }
+#feels-like { grid-area: feels; }
+#Humidity { grid-area: hum; }
+.weather-details p:empty { display: none; }
+
+/* Today */
+.events-header { margin-bottom: var(--space-2); }
+.event-list > p { color: var(--muted); padding-block: var(--space-2); }
+#calendar-body > p { margin-top: var(--space-3); color: var(--text-2); }
+
+/* ---------- Dashboard, login and hubs pages ---------- */
+
+.dashboard-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 0.0625rem solid var(--border);
+}
+.dashboard-nav a { color: var(--text); text-decoration: none; font-weight: 500; }
+.dashboard-nav a:hover { text-decoration: underline; }
+
+.dashboard-container {
+    max-width: 56.25rem;
+    margin: var(--space-5) auto;
+    padding: 0 var(--space-4);
+}
+.dashboard-container section {
+    background: var(--surface);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+    border: 0.0625rem solid var(--border);
+    border-radius: var(--radius-card);
+}
+.dashboard-container h2 { margin-top: 0; }
+hr { border: 0; border-top: 0.0625rem solid var(--border); }
+
+#connected-calendars { padding-left: var(--space-4); }
+#connected-calendars li { margin-bottom: var(--space-3); }
+
+.google-calendars,
+.apple-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0.75rem 0 0 var(--space-4);
+}
+.google-calendars label,
+.apple-options label {
+    display: flex;
+    align-items: center;
     gap: var(--space-2);
 }
 
-.searchform .search {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
+#apple-calendar-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 28.125rem;
 }
+#apple-calendar-form div { display: flex; flex-direction: column; gap: var(--space-1); }
+#apple-calendar-error { color: var(--danger); }
+#apple-calendar-success { color: var(--success); }
 
-
-
-/* ---- Polish pass ---- */
-
-/* Fix the gap: extra height goes to a spare bottom row, not between the cards */
-.home-grid {
-    grid-template-rows: auto auto 1fr;
-    margin-top: -2.5rem;
-    /* pulls the search bar up over the banner */
-    position: relative;
-}
-
-/* Banner: full-width gradient, content aligned with the grid below */
-body>header {
-    --pad-x: max(var(--space-4), calc((100% - 75rem) / 2 + var(--space-4)));
-    padding: var(--space-5) var(--pad-x) 4.5rem;
-    background: linear-gradient(135deg, #16213b 0%, #2f6fed 100%);
-    color: #fff;
-}
-
-body>header h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-}
-
-body>header .shortcut-name {
-    color: rgb(255 255 255 / 0.75);
-}
-
-#date {
-    opacity: 0.8;
-}
-
-#time {
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
-}
-
-/* Search: floating pill */
-.searchform .search {
-    border: 0;
-    border-radius: 999px;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 0.5rem 1.5rem rgb(20 30 60 / 0.18);
-}
-
-.searchform button {
-    border-radius: 999px;
-    padding-inline: 1.75rem;
-}
-
-/* Cards: softer, no hard border */
-#weather,
-#upcoming-events,
-#calendar {
-    border: 0;
-    border-radius: 1rem;
-    box-shadow: 0 0.25rem 1.5rem rgb(28 36 48 / 0.08);
-}
-
-#weather {
-    background: linear-gradient(160deg, #ffffff 40%, #eaf0ff 100%);
-}
-
-.weather-details p {
-    color: var(--color-muted);
-}
-
-/* Calendar */
-.calendar-heading h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.calendar-nav button {
-    border-radius: 999px;
-    padding-inline: 1rem;
-}
-
-.calendar-nav button:hover {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: #fff;
-}
-
-.home-grid .day.today {
-    background: #eef3ff;
-}
-
-.day-event {
-    background: var(--color-bg);
-    border-radius: 0.375rem;
-    padding: 0.125rem 0.375rem;
-}
-
-.day-event:hover {
-    background: #e4eaf8;
-}
-
-/* ---- Dark teal overrides ---- */
-
-body > header { background: linear-gradient(135deg, #06262b 0%, #0f766e 100%); }
-
-/* Cards get a faint border back so they separate from the dark background */
-#weather,
-#upcoming-events,
-#calendar { border: 1px solid var(--color-border); }
-#weather { background: linear-gradient(160deg, var(--color-surface) 40%, #164b4f 100%); }
-
-/* Buttons and inputs */
-button { color: var(--color-text); }
-button:hover { background: #1b434c; }
-button[type="submit"] { color: #062a2a; font-weight: 600; }
-.calendar-nav button:hover { color: #062a2a; }
-input:not([type="submit"]) {
-    background: var(--color-bg);
-    color: var(--color-text);
-    border-color: var(--color-border);
-}
-input::placeholder { color: var(--color-muted); }
-.shortcut-icon { border-color: var(--color-border); }
-
-/* Calendar: replace the hardcoded light cells from calendar.css */
-.home-grid #calendar-grid > div:not(.day) { background: #0b2227; }
-.home-grid .day { background: var(--color-surface); }
-.home-grid .day:nth-child(7n + 1),
-.home-grid .day:nth-child(7n) { background: #0e282e; }
-.home-grid .day:hover { background: #17414a; }
-.home-grid .day.selected { background: #1b4a53; }
-.home-grid .day.today { background: #134a50; }
-.home-grid .day.today .day-num { color: #062a2a; }
-.home-grid .day-event { background: rgb(255 255 255 / 0.06); }
-.home-grid .day-event:hover { background: rgb(255 255 255 / 0.12); }
-
-/* Dashboard page (old hardcoded whites) */
-.dashboard-nav { background: var(--color-surface); border-bottom-color: var(--color-border); }
-.dashboard-nav a { color: var(--color-text); }
-.dashboard-container section { background: var(--color-surface); border-color: var(--color-border); }
-hr { border-color: var(--color-border); }
-#apple-calendar-error { color: #ff8a80; }
-#apple-calendar-success { color: #7ee8a8; }
-
-
-/* Mobile */
+/* ---------- Mobile ---------- */
 @media (max-width: 48rem) {
+    .top-bar,
+    .band > header,
+    .home-grid { padding-inline: var(--space-3); }
+
+    .top-bar { gap: 0.75rem; }
+    .top-bar .hub-label { display: none; }
+    .top-bar .hub-name { margin-left: auto; color: var(--text-2); }
+
+    .band > header {
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: var(--space-3);
+    }
+    #date { font-size: 0.875rem; }
+    #time { font-size: clamp(1.75rem, 5dvh, 2.5rem); }
+    /* many shortcuts slide sideways instead of pushing the page down */
+    #shortcut-container { flex-wrap: nowrap; overflow-x: auto; min-width: 0; gap: 0.75rem; }
+    .shortcut { flex: none; width: 3rem; }
+    .shortcut a { width: 2.5rem; height: 2.5rem; margin-bottom: 0.25rem; border-radius: 0.625rem; }
+    .shortcut-name { font-size: 0.6875rem; }
+
     .home-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas: "search" "calendar" "weather" "events";
-        padding-inline: var(--space-3);
-        grid-template-rows: none;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        grid-template-areas:
+            "search   search"
+            "calendar calendar"
+            "events   weather";
+        gap: clamp(0.5rem, 1.6dvh, 0.75rem);
+        padding-block: clamp(0.5rem, 1.6dvh, 0.75rem);
     }
+    #upcoming-events,
+    #weather { align-self: stretch; height: clamp(6.5rem, 17dvh, 9rem); }
+    .weather-header,
+    .events-header { margin-bottom: 0.5rem; }
+    .weather-details { column-gap: 0.75rem; font-size: 0.75rem; }
+    #Tempature { font-size: 1.75rem; }
+    .today-event { font-size: 0.75rem; padding: 0.25rem 0; }
+    .today-event .event-time { min-width: 3.75rem; }
 
-    #date-time {
-        text-align: left;
-    }
+    #weather,
+    #upcoming-events,
+    #calendar { padding: clamp(0.75rem, 1.6dvh, 1rem); }
 
-    /* Sunday -> S, Monday -> M, etc. No HTML change needed */
-    .days-title div {
-        font-size: 0;
-        padding: 0.5rem 0;
-    }
+    /* Sunday -> S, Monday -> M. No HTML change needed */
+    .home-grid .days-title div { font-size: 0; padding: 0 0 0.5rem; text-align: center; }
+    .home-grid .days-title div::first-letter { font-size: 0.75rem; }
 
-    .days-title div::first-letter {
-        font-size: 0.75rem;
-    }
-
-    .day {
-        min-height: 4rem;
-        padding: 0.25rem;
-    }
-
-    .day-event {
-        font-size: 0.625rem;
-    }
+    /* Cells show dots only; tapping a day lists its events below */
+    /* .home-grid prefix: calendar.css loads after this file */
+    .home-grid .day { min-height: 0; padding: 0.25rem; text-align: center; }
+    .home-grid .day-num { display: flex; width: 1.5rem; margin: 0 auto 0.25rem; }
+    .home-grid .day-event { display: inline-flex; padding: 0; margin: 0 0.0625rem; font-size: 0; }
+    .home-grid .day-event .dot { margin: 0; width: 0.375rem; height: 0.375rem; }
+    .home-grid .day-more { display: none; }
 }
