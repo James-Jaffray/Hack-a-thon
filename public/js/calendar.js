@@ -59,14 +59,14 @@ async function renderMonth() {
         // "Events Today" for today, otherwise the date itself
         const isToday = key === new Date().toLocaleDateString('en-CA');
         heading.textContent = isToday
-            ? 'Events Today'
+            ? 'Today'
             : new Date(`${key}T00:00:00`).toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' });
 
         const events = byDay.get(key) ?? [];
 
         if (events.length === 0) {
             const p = document.createElement('p');
-            p.textContent = 'Nothing scheduled.';
+            p.textContent = 'Nothing scheduled';
             list.append(p);
         }
 
@@ -82,7 +82,15 @@ async function renderMonth() {
                 ? 'All day'
                 : new Date(ev.start).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 
-            row.append(dot, `${time}  ${ev.title} · ${ev.owner}`);
+            const timeEl = document.createElement('span');
+            timeEl.className = 'event-time';
+            timeEl.textContent = time;
+
+            const owner = document.createElement('span');
+            owner.className = 'event-owner';
+            owner.textContent = ` · ${ev.owner}`;
+
+            row.append(dot, timeEl, ev.title, owner);
             list.append(row);
         }
     }

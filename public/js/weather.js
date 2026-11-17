@@ -81,7 +81,7 @@ export async function getCurrentWeather(latitude, longitude) {
     }
 }
 
-const renderTemp = (para, show, currentTemp) => show ? para.textContent = `Temperature: ${currentTemp} °C` : para.textContent = '';
-const renderFeelsLike = (para, show, feelsLike) => show ? para.textContent = `Feels Like ${feelsLike} °C` : para.textContent = '';
-const renderCondition = (para, show, condition) => show ? para.textContent = `Condition: ${condition}` : para.textContent = '';
+const renderTemp = (para, show, currentTemp) => show ? para.textContent = `${Math.round(currentTemp)}°C` : para.textContent = '';
+const renderFeelsLike = (para, show, feelsLike) => show ? para.textContent = `Feels like ${Math.round(feelsLike)}°` : para.textContent = '';
+const renderCondition = (para, show, condition) => show ? para.textContent = condition : para.textContent = '';
 const renderHumidity = (para, show, humidity) => show ? para.textContent = `Humidity ${humidity}%` : para.textContent = '';

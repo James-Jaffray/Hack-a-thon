@@ -1,19 +1,11 @@
 export function getDate() {
-    const today = new Date();
-    let year = today.getFullYear();
-    let month = today.getMonth();
-    let day = today.getDate();
-    let date = document.getElementById('date');
-    date.textContent = `${year}/${month+1}/${day}`;
+    document.getElementById('date').textContent =
+        new Date().toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' });
 }
 
 export function updateClock() {
     const today = new Date();
-    let h = today.getHours();
-    let m = today.getMinutes();
-    let s = today.getSeconds();
-    let time = document.getElementById('time');
-    time.textContent = `${h}:${checkTime(m)}:${checkTime(s)}`;
+    document.getElementById('time').textContent = `${today.getHours()}:${checkTime(today.getMinutes())}`;
     setTimeout(updateClock, 1000)
 }
 
