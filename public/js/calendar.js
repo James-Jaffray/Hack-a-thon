@@ -167,7 +167,7 @@ async function renderMonth() {
         p.textContent = `${err.displayName} needs attention. `;
         if (err.needsReconnect) {
             const a = document.createElement('a');
-            a.href = `/auth/google?owner=${encodeURIComponent(err.ownerName ?? '')}`;
+            a.href = '/auth/google';
             a.textContent = 'Reconnect Google';
             p.append(a);
         }

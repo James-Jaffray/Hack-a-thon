@@ -1,3 +1,5 @@
+import { getMe } from './api.js';
+
 let latitude = 0;
 let longitude = 0;
 
@@ -17,22 +19,18 @@ export function getLat() {
 function success(position) {
     latitude = position.coords.latitude;
     longitude = position.coords.longitude;
-    testCoords();
 }
 
 function error() {
     alert("Sorry, no position available.");
 }
 
-function testCoords() {
-    console.log(`latitude: ${latitude}`);
-    console.log(`longitude: ${longitude}`);
-}
-
-const getTempToggle = localStorage.getItem("isTempToggled") === "true";
-const getFeelsLikeToggle = localStorage.getItem("isFeelsLikeToggled") === "true";
-const getConditionToggle = localStorage.getItem("isConditionToggled") === "true";
-const getHumidityToggle = localStorage.getItem("isHumidityToggled") === "true";
+// What to show is a hub setting chosen by the owner (see dashboard.js). On unless switched off.
+const settings = (await getMe()).data?.settings ?? {};
+const getTempToggle = settings.isTempToggled !== false;
+const getFeelsLikeToggle = settings.isFeelsLikeToggled !== false;
+const getConditionToggle = settings.isConditionToggled !== false;
+const getHumidityToggle = settings.isHumidityToggled !== false;
 
 const WEATHER_CODES = {
     0: 'Clear sky', 1: 'Mainly clear', 2: 'Partly cloudy', 3: 'Overcast',

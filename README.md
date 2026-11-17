@@ -69,7 +69,7 @@ pnpm dev                      # server restarts on every save; refresh the brows
 **Updating an existing database after pulling schema changes** (keeps your data):
 
 ```
-docker compose exec db psql -U postgres -d calhub -c "ALTER TABLE calendar_connections ADD COLUMN IF NOT EXISTS owner_name TEXT;"
+docker compose exec -T db psql -U postgres -d calhub < db/migrate.sql
 ```
 
 ## Tech stack
@@ -93,7 +93,7 @@ docs/       Research notes
 ## How it works
 
 1. The browser only talks to our Express app (same origin, session cookie).
-2. Connecting Google runs the OAuth flow on the server. We keep only the refresh token, and it is never sent to the browser. The owner label typed on the dashboard travels through the session and is saved with the connection when Google sends the user back.
+2. Connecting Google runs the OAuth flow on the server. We keep only the refresh token, and it is never sent to the browser. The connection is saved under the signed-in member, and their display name is the label on its events.
 3. `GET /api/events` loads every enabled connection in the hub in parallel, converts each calendar's events into one shared shape, tags each with its owner, sorts them, and returns them. If one calendar fails, the others still load and the failure is reported in `errors`.
 4. Apple/ICS links are fetched server-side. We only accept public `https` links and block private and internal addresses.
 5. Sharing is controlled at two levels: `is_enabled` switches a whole connection on or off, and `enabled_calendars` (Google only) lists exactly which of that account's calendars are shared.
@@ -127,24 +127,37 @@ Base URL is the same origin as the site (`http://localhost:3000` in dev). All bo
 
 ### Endpoints
 
+Auth column: `yes` = logged in to the hub; `member` = also signed in as a person in it (403 otherwise); `owner` = the member who connected that calendar (404 otherwise); `hub owner` = the member whose role is `owner`, which is the first profile created in the hub (403 otherwise). Everything except `/api/auth/*`, member login and `/api/hub/active` returns 403 `{deactivated: true}` while the hub is deactivated.
+
 | Method | Path | Auth | Purpose |
 | --- | --- | --- | --- |
 | POST | `/api/auth/signup` | no | `{email, password}` where `email` is the hub name (3 to 40 characters) → `201 {id, email}` (409 if the hub name is taken) |
 | POST | `/api/auth/login` | no | `{email, password}` → `200 {id, email}` (401 on bad credentials) |
-| GET | `/api/auth/me` | yes | → `{id, email}` |
+| GET | `/api/auth/me` | yes | → `{id, email, shortcutMode, settings, active, member}` where `member` is `{id, name, role}` or `null` |
+| POST | `/api/members/signup` | yes | `{name, password}` → `201 {id, name}`. Create your profile inside the hub (409 if the name is taken) |
+| POST | `/api/members/login` | yes | `{name, password}` → `{id, name}` (401 on bad credentials) |
+| PUT | `/api/members/me` | yes | `{name}` → `{id, name}`. Choose or change your display name (409 if taken); it is also the `ownerName` label on your calendars. Google members have `name: null` until they do. |
+| POST | `/api/members/logout` | yes | → `{ok: true}`. Stays logged in to the hub. |
+| GET | `/api/hub/members` | yes | → `[{id, name, role, isBanned}]` |
+| DELETE | `/api/hub/members/:id` | hub owner | Remove a member and their calendars → `204`. On a banned member this lifts the ban. |
+| POST | `/api/hub/members/:id/ban` | hub owner | The profile can no longer sign in and its calendars are removed → `{id, isBanned}` |
+| POST | `/api/hub/transfer` | hub owner | `{memberId}` → `{ok: true}`. That member becomes the owner; you become a member. |
+| PUT | `/api/hub/settings` | hub owner | `{shortcutMode?: 'shared' \| 'personal', settings?: {isTempToggled?, isFeelsLikeToggled?, isConditionToggled?, isHumidityToggled?}}` → `{shortcutMode, settings}` |
+| POST | `/api/hub/active` | hub owner | `{active: true \| false}` → `{active}`. Deactivate or reactivate the hub. |
+| GET | `/auth/google/signin` | yes | Browser redirect: sign in as a member with Google (account id only: no email, no calendar access) |
 | POST | `/api/auth/logout` | no | → `{ok: true}` |
-| GET | `/auth/google?owner=Name` | yes | Browser redirect to Google consent (navigate, do not fetch). `owner` labels the calendar; it defaults to the Google account's email. |
+| GET | `/auth/google` | member | Browser redirect to Google consent (navigate, do not fetch). The calendar is labelled with the member's display name. A new connection shares no calendars until its owner ticks some. |
 | GET | `/auth/google/callback` | yes | Google returns here, then redirects to `/dashboard.html?google=connected` (or `denied`, `error`) |
-| GET | `/api/connections` | yes | → `[{id, provider, displayName, ownerName, createdAt, isEnabled}]` (never includes credentials) |
-| POST | `/api/connections/apple` | yes | `{icsUrl, displayName?, ownerName?}` → `201 {id, provider, displayName, ownerName}` (400 unreadable link, 409 already added) |
-| PATCH | `/api/connections/:id` | yes | `{isEnabled?, ownerName?}` → `{id, isEnabled, ownerName}`. Switch a connection on or off, or rename its owner. |
-| DELETE | `/api/connections/:id` | yes | Remove a connected calendar → `204` (404 if not found) |
-| GET | `/api/connections/:id/calendars` | yes | Google only → `[{id, name, color, enabled}]`, the account's calendars and which are shared |
-| PUT | `/api/connections/:id/calendars` | yes | Google only. `{enabledIds: [...]}` → `{enabledIds}`. Saves which calendars are shared; unknown ids are dropped. |
+| GET | `/api/connections` | yes | → `[{id, provider, displayName, ownerName, createdAt, isEnabled, canEdit}]` (never includes credentials). `canEdit` is true on your own; `displayName` is `null` on other people's. |
+| POST | `/api/connections/apple` | member | `{icsUrl, displayName?}` → `201 {id, provider, displayName, ownerName}` (400 unreadable link, 409 already added) |
+| PATCH | `/api/connections/:id` | owner | `{isEnabled}` → `{id, isEnabled, ownerName}`. Switch a connection on or off. |
+| DELETE | `/api/connections/:id` | yes | Remove a connected calendar → `204` (404 if not found). Anyone in the hub may remove one. |
+| GET | `/api/connections/:id/calendars` | owner | Google only → `[{id, name, color, enabled}]`, the account's calendars and which are shared |
+| PUT | `/api/connections/:id/calendars` | owner | Google only. `{enabledIds: [...]}` → `{enabledIds}`. Saves which calendars are shared; unknown ids are dropped. |
 | GET | `/api/events?from=&to=` | yes | → `{events: Event[], errors: [{connectionId, provider, displayName, needsReconnect}]}`, merged and sorted by start. `from` and `to` are ISO dates and default to now through 30 days ahead. |
-| GET | `/api/shortcuts` | yes | → `[{id, position, label, url}]` |
-| PUT | `/api/shortcuts/:position` | yes | `{label, url}`, position 1 to 5 (label up to 40 characters, url must start with http or https), upserts |
-| DELETE | `/api/shortcuts/:position` | yes | Clear a slot → `204` |
+| GET | `/api/shortcuts` | yes | → `[{id, position, label, url}]`. The hub's shared set, or your own set when the hub is in `personal` mode and you are signed in as a member. |
+| PUT | `/api/shortcuts/:position` | hub owner (shared) or member (personal) | `{label, url}`, position 1 to 5 (label up to 40 characters, url must start with http or https), upserts |
+| DELETE | `/api/shortcuts/:position` | hub owner (shared) or member (personal) | Clear a slot → `204` |
 
 ## Team
 

@@ -19,7 +19,6 @@ export async function renderShortcuts() {
         return;
     }
     for (var i = 0; i < result.data.length; i++) {
-        console.log(result.data[i].label);
         let container = document.createElement('div');
         container.classList.add('shortcut');
         
