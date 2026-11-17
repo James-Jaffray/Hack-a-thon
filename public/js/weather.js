@@ -87,25 +87,3 @@ const renderTemp = (para, show, currentTemp) => show ? para.textContent = `Tempe
 const renderFeelsLike = (para, show, feelsLike) => show ? para.textContent = `Feels Like ${feelsLike} °C` : para.textContent = '';
 const renderCondition = (para, show, condition) => show ? para.textContent = `Condition: ${condition}` : para.textContent = '';
 const renderHumidity = (para, show, humidity) => show ? para.textContent = `Humidity ${humidity}%` : para.textContent = '';
-
-export async function fillForecast(latitude, longitude) {
-    const cacheKey = `weather:${latitude},${longitude}`;
-
-    try {
-        let current;
-        const cached = sessionStorage.getItem(cacheKey);
-
-        if (cached && Date.now() - JSON.parse(cached).at < 10 * 60 * 1000) {
-            current = JSON.parse(cached).current;   // reuse for 10 minutes
-        } else {
-            const today = new Date();
-            const date = new Date(`${today.getMonth()+1} ${today.getDate()}, ${today.getFullYear()}`);
-            console.log(date);
-            const days = document.getElementsByClassName('day-name');
-            
-        }
-    } catch (error) {
-        console.error('Failed to fetch weather data:', error);
-        document.getElementById('Condition').textContent = 'Weather unavailable';
-    }
-}

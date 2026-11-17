@@ -60,6 +60,12 @@ window.addEventListener("load", () => {
     humidityToggle.checked = localStorage.getItem("isHumidityToggled") === "true";
 });
 
+/*function renderCheckboxesToMatch() {
+    tempToggle.checked = Boolean(getTempToggle);//localStorage.getItem("isTempToggled");
+    console.log(localStorage.getItem("isTempToggled"))
+}
+renderCheckboxesToMatch();*/
+
 
 // ---- Shortcuts ----
 const labelInput = document.querySelector('#shortcut-label');
