@@ -3,3 +3,14 @@
 node_modules/
 test-*.js
 .DS_Store
+
+# Claude
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.claudeignore
+.mcp.json
+graphify-out/
+
+# database dumps: they contain calendar refresh tokens
+backups/

@@ -9,6 +9,8 @@
     <script type="module" src="js/auth-guard.js"></script>
     <script type="module" src="js/dashboard.js"></script>
     <script type="module" src="js/connections.js"></script>
+    <script type="module" src="js/member.js"></script>
+    <script type="module" src="js/hub-admin.js"></script>
     <script type="module" src="js/hub-bar.js"></script>
     <script type="module" src="js/shortcutCreate.js"></script>
 </head>
@@ -23,6 +25,10 @@
     </nav>
 
     <main class="dashboard-container">
+        <p id="hub-deactivated" role="alert" hidden>
+            This hub is deactivated. Its owner can reactivate it below.
+        </p>
+
         <section>
             <h2>Themes</h2>
         </section>
@@ -33,6 +39,7 @@
             <h2>Weather Display</h2>
 
             <h3>Toggles</h3>
+            <p>The same for everyone in the hub. Only the hub owner can change these.</p>
             <label for="temperature-check">Display Temperature</label>
             <input type="checkbox" name="temperature-check" id="temperature-check" class="checkboxes" checked>
             <br>
@@ -51,6 +58,7 @@
 
         <section>
             <h2>Shortcuts</h2>
+            <p id="shortcut-note"></p>
             <div id="current-shortcuts"></div>
             <div id="new-shortcut">
                 <label for="shortcut-label">Shortcut display label</label>
@@ -70,12 +78,27 @@
         <section id="calendar-connections">
             <h2>Calendar Connections</h2>
 
+            <form id="member-name-form" hidden>
+                <p>Choose a display name for this hub. This is what others in the hub see; your email is never
+                    shown. You can add calendars once you have one.</p>
+                <label for="display-name">Display name</label>
+                <input type="text" id="display-name" maxlength="40" required>
+                <button type="submit">Save</button>
+            </form>
+
+            <div id="member-signed-in" hidden>
+                <p>Your name in this hub: <strong id="member-current"></strong>. Only you can choose which of
+                    your calendars are shared.</p>
+            </div>
+
+            <p id="member-error" role="alert"></p>
+
+            <!-- Shown by js/member.js once you have a display name -->
+            <div id="add-calendars" hidden>
             <div>
                 <h3>Google Calendar</h3>
                 <p>Connect securely using your Google account.</p>
 
-                <label for="google-owner">Whose calendar is this?</label>
-                <input type="text" id="google-owner" placeholder="e.g. Althea" maxlength="40">
                 <button type="button" id="google-connect">Connect Google Calendar</button>
             </div>
 
@@ -94,11 +117,6 @@
                     </div>
 
                     <div>
-                        <label for="apple-calendar-owner">Whose calendar is this?</label>
-                        <input type="text" id="apple-calendar-owner" placeholder="e.g. Caleb" maxlength="40">
-                    </div>
-
-                    <div>
                         <label for="apple-calendar-url">
                             Apple Calendar Public Sharing URL
                         </label>
@@ -114,6 +132,7 @@
                     <p id="apple-calendar-success" role="status"></p>
                 </form>
             </div>
+            </div>
 
             <hr>
 
@@ -121,6 +140,35 @@
                 <h3>Connected Calendars</h3>
                 <ul id="connected-calendars"></ul>
             </div>
+        </section>
+
+        <hr>
+
+        <section id="hub-members">
+            <h2>Members</h2>
+            <ul id="member-list"></ul>
+
+            <!-- Shown by js/hub-admin.js to the hub owner only -->
+            <div id="owner-settings" hidden>
+                <h3>Invite someone</h3>
+                <p>Send them a link. Each link lets one person join and works for 7 days.</p>
+                <button type="button" id="invite-button">Create invite link</button>
+                <p id="invite-result" hidden>
+                    <input type="text" id="invite-link" aria-label="Invite link" size="50" readonly>
+                    <button type="button" id="invite-copy">Copy</button>
+                </p>
+
+                <h3>Owner settings</h3>
+                <label for="shortcut-mode">Shortcuts</label>
+                <select id="shortcut-mode">
+                    <option value="shared">One shared set for the whole hub</option>
+                    <option value="personal">Each member has their own (only they see them)</option>
+                </select>
+                <br>
+                <button type="button" id="hub-active-button"></button>
+            </div>
+
+            <p id="hub-error" role="alert"></p>
         </section>
 
         <hr>

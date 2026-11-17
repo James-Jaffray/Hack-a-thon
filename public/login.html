@@ -17,56 +17,70 @@
                 <h1>CalHub</h1>
             </header>
 
-            <datalist id="saved-hubs"></datalist>
+            <!-- Filled by js/login.js when you arrive from an invite link -->
+            <p id="invite-note" role="status"></p>
 
-            <div class="auth-toggle">
-                <button type="button" id="login-tab">
-                    Log in to a hub
-                </button>
-
-                <button type="button" id="signup-tab">
-                    Create a hub
-                </button>
+            <!-- Shown instead of the forms if you open an invite link while already signed in -->
+            <div id="invite-join" hidden>
+                <button type="button" id="join-button">Join hub</button>
+                <button type="button" id="other-account-button">Use a different account</button>
             </div>
 
-            <!-- Login form -->
-            <form id="login-form">
+            <div id="auth-forms">
+                <div class="auth-toggle">
+                    <button type="button" id="login-tab">
+                        Log in
+                    </button>
 
-                <h2>Welcome back to your hub</h2>
+                    <button type="button" id="signup-tab">
+                        Create an account
+                    </button>
+                </div>
 
-                <p>Everyone sharing this hub logs in with the same hub name and password.</p>
+                <!-- Login form -->
+                <form id="login-form">
 
-                <label for="login-email">Hub name</label>
-                <input type="text" id="login-email" name="email" list="saved-hubs" autocomplete="username" required>
+                    <h2>Welcome back</h2>
 
-                <label for="login-password">Password</label>
-                <input type="password" id="login-password" name="password" required>
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" name="email" autocomplete="username" required>
 
-                <button type="submit">Log in to hub</button>
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" autocomplete="current-password"
+                        required>
 
-                <p id="login-error" role="alert"></p>
+                    <button type="submit">Log in</button>
 
-            </form>
+                    <p id="login-error" role="alert"></p>
 
-            <!-- Signup form -->
-            <form id="signup-form" hidden>
+                </form>
 
-                <h2>Create a shared hub</h2>
-                <p>Pick a hub name and password for your group. Everyone who joins uses them, then adds their own
-                    calendars on the dashboard.</p>
+                <!-- Signup form -->
+                <form id="signup-form" hidden>
 
-                <label for="signup-email">Hub name</label>
-                <input type="text" id="signup-email" name="email" list="saved-hubs" minlength="3" maxlength="40"
-                    autocomplete="username" required>
+                    <h2>Create your account</h2>
+                    <p>Your account is yours alone. After this you can create a hub, or join one with an invite link
+                        from its owner.</p>
 
-                <label for="signup-password">Password</label>
-                <input type="password" id="signup-password" name="password" minlength="8" maxlength="72" required>
+                    <label for="signup-name">Your name</label>
+                    <input type="text" id="signup-name" name="name" maxlength="40" autocomplete="nickname" required>
 
-                <button type="submit">Create hub</button>
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" name="email" maxlength="254" autocomplete="username"
+                        required>
 
-                <p id="signup-error" role="alert"></p>
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" name="password" minlength="8" maxlength="72"
+                        autocomplete="new-password" required>
 
-            </form>
+                    <button type="submit">Create account</button>
+
+                    <p id="signup-error" role="alert"></p>
+
+                </form>
+
+                <p><a href="/auth/google/signin">Sign in with Google</a></p>
+            </div>
 
         </section>
     </main>

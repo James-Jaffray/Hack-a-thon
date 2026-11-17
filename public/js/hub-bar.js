@@ -1,17 +1,16 @@
-import { getMe, logout } from './api.js';
+import { getMe } from './api.js';
 
-// Show which hub we're in (the "email" field holds the hub name)
+// Show which hub we're in
 const result = await getMe();
 if (result.ok && result.data) {
     document.querySelectorAll('.hub-name').forEach((el) => {
-        el.textContent = result.data.email;
+        el.textContent = result.data.hubName;
     });
 }
 
-// "Switch hub" = log out, then land on the login page
+// "Switch hub" = the list of your hubs (you can also create one or log out there)
 document.querySelectorAll('.switch-hub').forEach((button) => {
-    button.addEventListener('click', async () => {
-        await logout();
-        window.location.href = 'login.html';
+    button.addEventListener('click', () => {
+        window.location.href = 'hubs.html';
     });
 });

@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import sql from '../lib/db.js';
-import { requireAuth } from '../lib/auth.js';
+import { requireAuth, requireActiveHub } from '../lib/auth.js';
 import { fetchGoogleEvents } from '../lib/google.js';
 import { fetchIcsEvents } from '../lib/ics.js';
 
 const router = Router();
-router.use(requireAuth);
+router.use(requireAuth, requireActiveHub);
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
     const connections = await sql`
     SELECT id, provider, credential, display_name, owner_name, enabled_calendars, is_enabled
     FROM calendar_connections
-    WHERE user_id = ${req.session.userId}`;
+    WHERE hub_id = ${req.session.hubId}`;
 
     // allSettled: one broken connection must not take down the others
     const results = await Promise.allSettled(connections.map((c) => {
@@ -48,7 +48,7 @@ router.get('/', async (req, res) => {
             errors.push({
                 connectionId: c.id,
                 provider: c.provider,
-                displayName: c.display_name,
+                displayName: c.owner_name || c.display_name,   // not display_name: for Google that's an email
                 ownerName: c.owner_name,
                 needsReconnect: Boolean(r.reason.needsReconnect),
             });

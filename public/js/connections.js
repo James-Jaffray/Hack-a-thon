@@ -13,7 +13,6 @@ const appleForm = document.querySelector('#apple-calendar-form');
 const message = document.querySelector('#apple-calendar-success');
 const errorMessage = document.querySelector('#apple-calendar-error');
 
-const googleOwnerInput = document.querySelector('#google-owner');
 const googleConnectButton = document.querySelector('#google-connect');
 
 // Display the result of Google OAuth
@@ -21,7 +20,7 @@ const googleResult = new URLSearchParams(location.search).get('google');
 
 if (googleResult) {
     message.textContent = {
-        connected: 'Google Calendar connected.',
+        connected: 'Google Calendar connected. Tick the calendars you want to share below.',
         denied: 'Google access was denied.',
         error: 'Something went wrong connecting to Google. Try again.',
     }[googleResult] ?? '';
@@ -29,19 +28,21 @@ if (googleResult) {
     history.replaceState(null, '', location.pathname);
 }
 
-// Connect Google: pass the owner label along to the OAuth start route
+// Connect Google: a normal page navigation, because Google's consent screen is a full page
 googleConnectButton.addEventListener('click', () => {
-    const owner = googleOwnerInput.value.trim();
-    location.href = `/auth/google?owner=${encodeURIComponent(owner)}`;
+    location.href = '/auth/google';
 });
 
-// One row: calendar name, show toggle, disconnect, and the picker for Google
+// One row: calendar name and disconnect. The show toggle and the Google picker
+// only appear on your own calendars (canEdit); the server enforces the same rule.
 function renderConnection(connection) {
     const listItem = document.createElement('li');
 
     const calendarName = document.createElement('span');
-    calendarName.textContent =
-        `${connection.displayName} (${connection.provider})`;
+    // displayName is hidden by the server for other people's calendars
+    calendarName.textContent = connection.displayName
+        ? `${connection.displayName} (${connection.provider})`
+        : `${connection.provider} calendar`;
 
     const disconnectButton = document.createElement('button');
     disconnectButton.type = 'button';
@@ -49,7 +50,7 @@ function renderConnection(connection) {
 
     disconnectButton.addEventListener('click', async () => {
         const confirmed = confirm(
-            `Are you sure you want to disconnect ${connection.displayName}?`
+            `Are you sure you want to disconnect ${connection.displayName ?? 'this calendar'}?`
         );
         if (!confirmed) return;
 
@@ -63,6 +64,8 @@ function renderConnection(connection) {
     });
 
     listItem.append(calendarName, ' ', disconnectButton);
+
+    if (!connection.canEdit) return listItem;
 
     // Show/hide this whole connection (works for Google and Apple)
     const toggleContainer = document.createElement('div');
@@ -164,10 +167,9 @@ appleForm.addEventListener('submit', async (event) => {
 
     const icsUrl = document.querySelector('#apple-calendar-url').value.trim();
     const displayName = document.querySelector('#apple-calendar-name').value.trim();
-    const ownerName = document.querySelector('#apple-calendar-owner').value.trim();
 
     try {
-        const result = await addApple(icsUrl, displayName, ownerName);
+        const result = await addApple(icsUrl, displayName);
 
         if (!result.ok) {
             errorMessage.textContent =

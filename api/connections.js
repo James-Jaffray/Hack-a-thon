@@ -1,58 +1,52 @@
 import { Router } from 'express';
 import sql from '../lib/db.js';
-import { requireAuth } from '../lib/auth.js';
+import { requireAuth, requireActiveHub, requireMember } from '../lib/auth.js';
 import { fetchIcsEvents, normalizeIcsUrl } from '../lib/ics.js';
 import { listGoogleCalendars } from '../lib/google.js';
 
 const router = Router();
-router.use(requireAuth);
+router.use(requireAuth, requireActiveHub);
 
-// GET /api/connections -> [{ id, provider, displayName, ownerName, createdAt, isEnabled }]
+// GET /api/connections -> [{ id, provider, displayName, ownerName, createdAt, isEnabled, canEdit }]
+// canEdit = it's yours. Other people's displayName is hidden (for Google it's their email address).
 // Never select `credential`: it holds refresh tokens.
 router.get('/', async (req, res) => {
     const rows = await sql`
     SELECT
         id,
         provider,
-        display_name AS "displayName",
+        CASE WHEN member_id = ${req.member.id} THEN display_name END AS "displayName",
+        COALESCE(member_id = ${req.member.id}, false) AS "canEdit",
         owner_name AS "ownerName",
         created_at AS "createdAt",
         is_enabled AS "isEnabled"
     FROM calendar_connections
-    WHERE user_id = ${req.session.userId}
+    WHERE hub_id = ${req.session.hubId}
     ORDER BY id`;
 
     res.json(rows);
 });
 
-// PATCH /api/connections/:id  body: { isEnabled?, ownerName? }
-router.patch('/:id', async (req, res) => {
+// PATCH /api/connections/:id  body: { isEnabled }
+router.patch('/:id', requireMember, async (req, res) => {
     const id = Number(req.params.id);
 
     if (!Number.isInteger(id)) {
         return res.status(400).json({ error: 'Bad id' });
     }
 
-    const { isEnabled, ownerName } = req.body ?? {};
+    const { isEnabled } = req.body ?? {};
 
-    if (isEnabled !== undefined && typeof isEnabled !== 'boolean') {
+    if (typeof isEnabled !== 'boolean') {
         return res.status(400).json({ error: 'isEnabled must be true or false' });
     }
-    if (ownerName !== undefined && typeof ownerName !== 'string') {
-        return res.status(400).json({ error: 'ownerName must be text' });
-    }
-    if (isEnabled === undefined && ownerName === undefined) {
-        return res.status(400).json({ error: 'Nothing to update' });
-    }
-
-    const owner = ownerName === undefined ? null : (ownerName.trim().slice(0, 40) || null);
 
     const [row] = await sql`
         UPDATE calendar_connections
-        SET is_enabled = COALESCE(${isEnabled ?? null}, is_enabled),
-            owner_name = CASE WHEN ${ownerName !== undefined} THEN ${owner} ELSE owner_name END
+        SET is_enabled = ${isEnabled}
         WHERE id = ${id}
-        AND user_id = ${req.session.userId}
+        AND hub_id = ${req.session.hubId}
+        AND member_id = ${req.member.id}
         RETURNING id, is_enabled AS "isEnabled", owner_name AS "ownerName"
     `;
 
@@ -64,22 +58,23 @@ router.patch('/:id', async (req, res) => {
 });
 
 // DELETE /api/connections/:id
+// Anyone in the hub may remove a calendar: removing only ever shares less.
 router.delete('/:id', async (req, res) => {
     const id = Number(req.params.id);
     if (!Number.isInteger(id)) return res.status(400).json({ error: 'Bad id' });
 
-    // user_id in the WHERE means you can only delete your own
+    // hub_id in the WHERE means you can only delete from your own hub
     const result = await sql`
     DELETE FROM calendar_connections
-    WHERE id = ${id} AND user_id = ${req.session.userId}`;
+    WHERE id = ${id} AND hub_id = ${req.session.hubId}`;
 
     if (result.count === 0) return res.status(404).json({ error: 'Not found' });
     res.status(204).end();
 });
 
-// POST /api/connections/apple  body: { icsUrl, displayName, ownerName }
-router.post('/apple', async (req, res) => {
-    const { icsUrl, displayName, ownerName } = req.body ?? {};
+// POST /api/connections/apple  body: { icsUrl, displayName }
+router.post('/apple', requireMember, async (req, res) => {
+    const { icsUrl, displayName } = req.body ?? {};
 
     const url = normalizeIcsUrl(icsUrl);
     if (!url) {
@@ -88,11 +83,6 @@ router.post('/apple', async (req, res) => {
     const name = typeof displayName === 'string' && displayName.trim()
         ? displayName.trim().slice(0, 60)
         : 'Apple Calendar';
-
-    // Who is this calendar for? Falls back to the calendar name.
-    const owner = typeof ownerName === 'string' && ownerName.trim()
-        ? ownerName.trim().slice(0, 40)
-        : name;
 
     // Prove the link works by fetching one day (this also runs the safety checks)
     try {
@@ -105,16 +95,16 @@ router.post('/apple', async (req, res) => {
     }
 
     const [row] = await sql`
-    INSERT INTO calendar_connections (user_id, provider, credential, display_name, owner_name)
-    VALUES (${req.session.userId}, 'apple', ${url.href}, ${name}, ${owner})
-    ON CONFLICT (user_id, provider, credential) DO NOTHING
+    INSERT INTO calendar_connections (hub_id, member_id, provider, credential, display_name, owner_name)
+    VALUES (${req.session.hubId}, ${req.member.id}, 'apple', ${url.href}, ${name}, ${req.member.name})
+    ON CONFLICT (hub_id, provider, credential) DO NOTHING
     RETURNING id, provider, display_name AS "displayName", owner_name AS "ownerName"`;
 
     if (!row) return res.status(409).json({ error: 'That calendar is already connected' });
     res.status(201).json(row);
 });
 
-// Load a Google connection that belongs to this user, or send the error and return null
+// Load a Google connection that belongs to this member, or send the error and return null
 async function loadGoogleConnection(req, res) {
     const id = Number(req.params.id);
     if (!Number.isInteger(id)) {
@@ -124,7 +114,8 @@ async function loadGoogleConnection(req, res) {
     const [row] = await sql`
     SELECT id, credential, enabled_calendars
     FROM calendar_connections
-    WHERE id = ${id} AND user_id = ${req.session.userId} AND provider = 'google'`;
+    WHERE id = ${id} AND hub_id = ${req.session.hubId} AND member_id = ${req.member.id}
+        AND provider = 'google'`;
     if (!row) {
         res.status(404).json({ error: 'Not found' });
         return null;
@@ -133,7 +124,7 @@ async function loadGoogleConnection(req, res) {
 }
 
 // GET /api/connections/:id/calendars -> [{ id, name, color, enabled }]
-router.get('/:id/calendars', async (req, res) => {
+router.get('/:id/calendars', requireMember, async (req, res) => {
     try {
         const row = await loadGoogleConnection(req, res);
         if (!row) return;
@@ -156,7 +147,7 @@ router.get('/:id/calendars', async (req, res) => {
 });
 
 // PUT /api/connections/:id/calendars  body: { enabledIds: ["...", "..."] }
-router.put('/:id/calendars', async (req, res) => {
+router.put('/:id/calendars', requireMember, async (req, res) => {
     const row = await loadGoogleConnection(req, res);
     if (!row) return;
 
