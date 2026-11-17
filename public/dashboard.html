@@ -40,20 +40,42 @@
             <input type="checkbox" name="feels-like-check" id="feels-like-check" class="checkboxes" checked>
             <br>
             <label for="condition-check">Display Condition</label>
-            <input type="checkbox" name="condition-check" id="condition-check", class="checkboxes" checked>
+            <input type="checkbox" name="condition-check" id="condition-check" class="checkboxes" checked>
             <br>
             <label for="humidity-check">Display Humidity</label>
-            <input type="checkbox" name="humidity-check" id="humidity-check", class="checkboxes" checked>
+            <input type="checkbox" name="humidity-check" id="humidity-check" class="checkboxes" checked>
 
             <h3>Units</h3>
-            
+            <label for="tempature-unit">Tempature Unit</label>
+            <select name="tempature-unit" id="tempature-unit">
+                <option value="C">
+                    Celcius
+                </option>
+                <option value="F">
+                    Fahrenheit
+                </option>
+                <option value="K">
+                    Kelvin
+                </option>
+            </select>
         </section>
 
         <hr>
 
         <section>
             <h2>Clock Display</h2>
-
+            <label for="show-clock">Show Clock</label>
+            <input type="checkbox" name="show-clock" id="show-clock" class="checkboxes" checked>
+            <br>
+            <label for="clock-type">Clock Type</label>
+            <select name="clock-type" id="clock-type">
+                <option value="24Hour">
+                    24 Hour Clock
+                </option>
+                <option value="12Hour">
+                    12 Hour Clock
+                </option>
+            </select>
         </section>
 
         <hr>
