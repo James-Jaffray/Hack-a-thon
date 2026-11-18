@@ -22,6 +22,14 @@ function findActiveRadioValue(elements) {
     }
 }
 
+function setRadioToCorrectSpot(elements, searchingValue) {
+    for (const element of elements) {
+        if (element.value == searchingValue) {
+            element.checked = true;
+            break;
+        }
+    }
+}
 
 // ---- Weather Display ----
 
@@ -49,17 +57,17 @@ const showDecimalTempToggle = document.getElementById('show-decimal');
 const windSpeedOpts = document.getElementsByName('speed-unit');
 const precipOpts = document.getElementsByName('percip-unit');
 
-if (getTempToggle === null) localStorage.setItem('isTempToggled', tempToggle.checked);
-if (getFeelsLikeToggle === null) localStorage.setItem('isFeelsLikeToggled', feelsLikeToggle.checked);
-if (getConditionToggle === null) localStorage.setItem('isConditionToggled', conditionToggle.checked);
-if (getHumidityToggle === null) localStorage.setItem('isHumidityToggled', humidityToggle.checked);
-if (getWindToggle === null) localStorage.setItem('isWindToggled', windToggle.checked);
-if (getForecastBtnToggle === null) localStorage.setItem('isForecastBtnToggled', forecastBtnToggle.checked);
-if (getWeatherIconToggle === null) localStorage.setItem('isWeatherIconToggled', weatherIconToggle.checked);
-if (getTempUnit === null) localStorage.setItem('tempatureUnit', findActiveRadioValue(tempUnitOpts));
-if (getTempShowDecToggle === null) localStorage.setItem('isDecInTempToggled', showDecimalTempToggle.checked);
-if (getWindSpeedUnit === null) localStorage.setItem('windSpeedUnit', findActiveRadioValue(windSpeedOpts));
-if (getPrecipUnit === null) localStorage.setItem('precipUnit', findActiveRadioValue(precipOpts));
+if (getTempToggle == null) localStorage.setItem('isTempToggled', tempToggle.checked);
+if (getFeelsLikeToggle == null) localStorage.setItem('isFeelsLikeToggled', feelsLikeToggle.checked);
+if (getConditionToggle == null) localStorage.setItem('isConditionToggled', conditionToggle.checked);
+if (getHumidityToggle == null) localStorage.setItem('isHumidityToggled', humidityToggle.checked);
+if (getWindToggle == null) localStorage.setItem('isWindToggled', windToggle.checked);
+if (getForecastBtnToggle == null) localStorage.setItem('isForecastBtnToggled', forecastBtnToggle.checked);
+if (getWeatherIconToggle == null) localStorage.setItem('isWeatherIconToggled', weatherIconToggle.checked);
+if (getTempUnit == null) localStorage.setItem('tempatureUnit', findActiveRadioValue(tempUnitOpts));
+if (getTempShowDecToggle == null) localStorage.setItem('isDecInTempToggled', showDecimalTempToggle.checked);
+if (getWindSpeedUnit == null) localStorage.setItem('windSpeedUnit', findActiveRadioValue(windSpeedOpts));
+if (getPrecipUnit == null) localStorage.setItem('precipUnit', findActiveRadioValue(precipOpts));
 
 tempToggle.addEventListener('click', () => {
     localStorage.setItem('isTempToggled', tempToggle.checked);
@@ -89,9 +97,9 @@ weatherIconToggle.addEventListener('click', () => {
     localStorage.setItem('isWeatherIconToggled', weatherIconToggle.checked);
 });
 
-for (let i = 0; i < tempUnitOpts.length; i++) {
-    tempUnitOpts[i].addEventListener('click', () => {
-        localStorage.setItem('tempatureUnit', tempUnitOpts[i].value);
+for (const option of tempUnitOpts) {
+    option.addEventListener('click', () => {
+        localStorage.setItem('tempatureUnit', option.value);
     });
 }
 
@@ -99,49 +107,86 @@ showDecimalTempToggle.addEventListener('click', () => {
     localStorage.setItem('isDecInTempToggled', showDecimalTempToggle.checked);
 });
 
-for (let i = 0; i < windSpeedOpts.length; i++) {
-    windSpeedOpts[i].addEventListener('click', () => {
-        localStorage.setItem('windSpeedUnit', windSpeedOpts[i].value);
+for (const option of windSpeedOpts) {
+    option.addEventListener('click', () => {
+        localStorage.setItem('windSpeedUnit', option.value);
     });
 }
 
-for (let i = 0; i < precipOpts.length; i++) {
-    precipOpts[i].addEventListener('click', () => {
-        localStorage.setItem('precipUnit', precipOpts[i].value);
+for (const option of precipOpts) {
+    option.addEventListener('click', () => {
+        localStorage.setItem('precipUnit', option.value);
     });
 }
 
-window.addEventListener("load", () => {
-    tempToggle.checked = getTempToggle === "true";
-    feelsLikeToggle.checked = getFeelsLikeToggle === "true";
-    conditionToggle.checked = getConditionToggle === "true";
-    humidityToggle.checked = getHumidityToggle === "true";
-    windToggle.checked = getWindToggle === "true";
-    forecastBtnToggle.checked = getForecastBtnToggle === "true";
-    weatherIconToggle.checked = getWeatherIconToggle === "true";
-    for (let i = 0; i < tempUnitOpts.length; i++) {
-        if (tempUnitOpts[i].value == getTempUnit) {
-            tempUnitOpts[i].checked = true;
-            break;
-        }
-    }
-    showDecimalTempToggle.checked = getTempShowDecToggle === "true";
-    for (let i = 0; i < windSpeedOpts.length; i++) {
-        if (windSpeedOpts[i].value == getWindSpeedUnit) {
-            windSpeedOpts[i].checked = true;
-            break;
-        }
-    }
-    for (let i = 0; i < precipOpts.length; i++) {
-        if (precipOpts[i].value == getPrecipUnit) {
-            precipOpts[i].checked = true;
-            break;
-        }
-    }
-});
+tempToggle.checked = getTempToggle === "true";
+feelsLikeToggle.checked = getFeelsLikeToggle === "true";
+conditionToggle.checked = getConditionToggle === "true";
+humidityToggle.checked = getHumidityToggle === "true";
+windToggle.checked = getWindToggle === "true";
+forecastBtnToggle.checked = getForecastBtnToggle === "true";
+weatherIconToggle.checked = getWeatherIconToggle === "true";
+setRadioToCorrectSpot(tempUnitOpts, getTempUnit);
+showDecimalTempToggle.checked = getTempShowDecToggle === "true";
+setRadioToCorrectSpot(windSpeedOpts, getWindSpeedUnit);
+setRadioToCorrectSpot(precipOpts, getPrecipUnit);
 
 // ---- Clock and Date Display ----
+const getClockToggle = localStorage.getItem('isClockToggled');
+const getSecondsToggle = localStorage.getItem('isSecondsToggled');
+const getMillisecondsToggle = localStorage.getItem('isMillisecondsToggled');
+const getClockFormat = localStorage.getItem('clockFormat');
+const getDateToggle = localStorage.getItem('isDateToggled');
+const getDateFormat = localStorage.getItem('dateFormat');
 
+const clockToggle = document.getElementById('show-clock');
+const secondsToggle = document.getElementById('show-seconds');
+const millisecondsToggle = document.getElementById('show-milli');
+const clockFormats = document.getElementsByName('clock-format');
+const dateToggle = document.getElementById('show-date');
+const dateFormats = document.getElementsByName('date-format');
+
+if (getClockToggle == null) localStorage.setItem('isClockToggled', clockToggle.checked);
+if (getSecondsToggle == null) localStorage.setItem('isSecondsToggled', secondsToggle.checked);
+if (getMillisecondsToggle == null) localStorage.setItem('isMillisecondsToggled', millisecondsToggle.checked);
+if (getClockFormat == null) localStorage.setItem('clockFormat', findActiveRadioValue(clockFormats));
+if (getDateToggle == null) localStorage.setItem('isDateToggled', dateToggle.checked);
+if (getDateFormat == null) localStorage.setItem('dateFormat', findActiveRadioValue(dateFormats));
+
+clockToggle.addEventListener('click', () => {
+    localStorage.setItem('isClockedToggled', clockToggle.checked);
+});
+
+secondsToggle.addEventListener('click', () => {
+    localStorage.setItem('isSecondsToggled', secondsToggle.checked);
+});
+
+millisecondsToggle.addEventListener('click', () => {
+    localStorage.setItem('isMillisecondsToggled', millisecondsToggle.checked);
+});
+
+for (const format of clockFormats) {
+    format.addEventListener('click', () => {
+        localStorage.setItem('clockFormat', format.value);
+    });
+}
+
+dateToggle.addEventListener('click', () => {
+    localStorage.setItem('isDateToggled', dateToggle.checked);
+});
+
+for (const format of dateFormats) {
+    format.addEventListener('click', () => {
+        localStorage.setItem('dateFormat', format.value);
+    });
+}
+
+clockToggle.checked = getClockToggle === "true";
+secondsToggle.checked = getSecondsToggle === "true";
+millisecondsToggle.checked = getMillisecondsToggle === "true";
+setRadioToCorrectSpot(clockFormats, getClockFormat);
+dateToggle.checked = getDateToggle === "true";
+setRadioToCorrectSpot(dateFormats, getDateFormat);
 
 // ---- Shortcuts ----
 const labelInput = document.querySelector('#shortcut-label');
