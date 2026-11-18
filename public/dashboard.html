@@ -39,27 +39,26 @@
             <h2>Weather Display</h2>
             <fieldset>
                 <legend>Toggles</legend>
-                <p>The same for everyone in the hub. Only the hub owner can change these.</p>
                 <label for="temperature-check">Display Temperature</label>
-                <input type="checkbox" name="temperature-check" id="temperature-check" class="checkboxes" checked>
+                <input type="checkbox" name="temperature-check" id="temperature-check" checked>
                 <br>
                 <label for="feels-like-check">Display Feels Like Temperature</label>
-                <input type="checkbox" name="feels-like-check" id="feels-like-check" class="checkboxes" checked>
+                <input type="checkbox" name="feels-like-check" id="feels-like-check" checked>
                 <br>
                 <label for="condition-check">Display Condition</label>
-                <input type="checkbox" name="condition-check" id="condition-check" class="checkboxes" checked>
+                <input type="checkbox" name="condition-check" id="condition-check" checked>
                 <br>
                 <label for="humidity-check">Display Humidity</label>
-                <input type="checkbox" name="humidity-check" id="humidity-check" class="checkboxes" checked>
+                <input type="checkbox" name="humidity-check" id="humidity-check" checked>
                 <br>
                 <label for="wind-check">Display Wind</label>
-                <input type="checkbox" name="wind-check" id="wind-check" class="checkboxes">
+                <input type="checkbox" name="wind-check" id="wind-check">
                 <br>
                 <label for="forecast-btn-check">Display Forecast Button</label>
-                <input type="checkbox" name="forecast-btn-check" id="forecast-btn-check" class="checkboxes" checked>
+                <input type="checkbox" name="forecast-btn-check" id="forecast-btn-check" checked>
                 <br>
                 <label for="weather-icon-check">Display Weather icon</label>
-                <input type="checkbox" name="weather-icon-check" id="weather-icon-check" class="checkboxes" checked>
+                <input type="checkbox" name="weather-icon-check" id="weather-icon-check" checked>
             </fieldset>
 
             <fieldset>
@@ -76,7 +75,7 @@
                     <input type="radio" name="tempature-unit" id="kelvin-check" value="K">
                     <br>
                     <label for="show-decimal">Show decimals in Tempatures</label>
-                    <input type="checkbox" name="show-decimal" id="show-decimal" class="checkboxes">
+                    <input type="checkbox" name="show-decimal" id="show-decimal">
                 </fieldset>
                 <fieldset>
                     <legend>Speed Units</legend>
@@ -108,29 +107,46 @@
         <hr>
 
         <section>
-            <h2>Clock Display</h2>
-
-            <label for="show-clock">Show Clock</label>
-            <input type="checkbox" name="show-clock" id="show-clock" class="checkboxes" checked>
-            <br>
-            <label for="clock-type">Clock Type</label>
-            <select name="clock-type" id="clock-type">
-                <option value="24Hour">
-                    24 Hour Clock
-                </option>
-                <option value="12Hour">
-                    12 Hour Clock
-                </option>
-            </select>
-            <br>
-            <label for="show-seconds">Show seconds in clock</label>
-            <input type="checkbox" name="show-seconds" id="show-seconds" class="checkboxes">
-            <br>
-            <label for="show-milli">Show milliseconds in clock</label>
-            <input type="checkbox" name="show-seconds" id="show-milli" class="checkboxes">
-            <br>
-            <label for="clock-timezone">Clock timezone</label>
-            <select name="clock-timezone" id="clock-timezone"></select>
+            <h2>Clock and Date Display</h2>
+            <fieldset>
+                <legend>Clock</legend>
+                <label for="show-clock">Show Clock</label>
+                <input type="checkbox" name="show-clock" id="show-clock" checked>
+                <br>
+                <label for="show-seconds">Show seconds in clock</label>
+                <input type="checkbox" name="show-seconds" id="show-seconds">
+                <br>
+                <label for="show-milli">Show milliseconds in clock</label>
+                <input type="checkbox" name="show-seconds" id="show-milli">
+                <br>
+                <label for="clock-timezone">Clock timezone</label>
+                <select name="clock-timezone" id="clock-timezone"></select>
+                <fieldset>
+                    <legend>Clock Format</legend>
+                    <label for="24-check" class="radio-label">24 Hour Clock</label>
+                    <input type="radio" name="clock-format" id="24-check" value="24" checked>
+                    <br>
+                    <label for="12-check" class="radio-label">12 Hour Clock</label>
+                    <input type="radio" name="clock-format" id="12-check" value="12">
+                </fieldset>
+            </fieldset>
+            <fieldset>
+                <legend>Date</legend>
+                <label for="show-date">Show Date</label>
+                <input type="checkbox" name="show-date" id="show-date" checked>
+                <br>
+                <fieldset>
+                    <legend>Date Format</legend>
+                    <label for="dmy-check" class="radio-label">DD/MM/YY</label>
+                    <input type="radio" name="date-format" id="dmy-check" value="dmy" checked>
+                    <br>
+                    <label for="mdy-check" class="radio-label">MM/DD/YY</label>
+                    <input type="radio" name="date-format" id="mdy-check" value="mdy">
+                    <br>
+                    <label for="ymd-check" class="radio-label">YY/MM/DD</label>
+                    <input type="radio" name="date-format" id="ymb-check" value="ymb">
+                </fieldset>
+            </fieldset>
         </section>
 
         <hr>
