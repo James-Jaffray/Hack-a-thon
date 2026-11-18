@@ -2,16 +2,24 @@ import { getCurrentWeather } from "./weather.js";
 import { renderShortcuts, shortcuts } from "./shortcuts.js";
 import { updateClock, getDate } from "./clock.js";
 
-/*weatherJs.find({search: 'San Francisco, CA', degreeType: 'F'}, function(err, result) {
-  if(err) console.log(err);
- 
-  console.log(JSON.stringify(result, null, 2));
-});*/
-
 //getLocation();
-getCurrentWeather( 53.5461, -113.4938);
+getCurrentWeather(53.5461, -113.4938);
 
 getDate();
 updateClock();
 
 renderShortcuts();
+
+const showForecastBtn = document.getElementById('show-forecastBtn');
+const exitForcestBtn = document.getElementById('exit-forecastBtn');
+const forecastModal = document.getElementById('forecastModal');
+
+showForecastBtn.addEventListener('click', () => {
+  forecastModal.style.display = 'block';
+});
+
+exitForcestBtn.addEventListener('click', () => {
+  forecastModal.style.display = 'none';
+});
+
+//fillForecast(53.5461, -113.4938);

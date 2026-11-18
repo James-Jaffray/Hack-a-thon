@@ -14,3 +14,5 @@ graphify-out/
 
 # database dumps: they contain calendar refresh tokens
 backups/
+
+dockerSetup.cmd

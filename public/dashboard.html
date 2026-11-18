@@ -37,21 +37,116 @@
 
         <section>
             <h2>Weather Display</h2>
+            <fieldset>
+                <legend>Toggles</legend>
+                <label for="temperature-check">Display Temperature</label>
+                <input type="checkbox" name="temperature-check" id="temperature-check" checked>
+                <br>
+                <label for="feels-like-check">Display Feels Like Temperature</label>
+                <input type="checkbox" name="feels-like-check" id="feels-like-check" checked>
+                <br>
+                <label for="condition-check">Display Condition</label>
+                <input type="checkbox" name="condition-check" id="condition-check" checked>
+                <br>
+                <label for="humidity-check">Display Humidity</label>
+                <input type="checkbox" name="humidity-check" id="humidity-check" checked>
+                <br>
+                <label for="wind-check">Display Wind</label>
+                <input type="checkbox" name="wind-check" id="wind-check">
+                <br>
+                <label for="forecast-btn-check">Display Forecast Button</label>
+                <input type="checkbox" name="forecast-btn-check" id="forecast-btn-check" checked>
+                <br>
+                <label for="weather-icon-check">Display Weather icon</label>
+                <input type="checkbox" name="weather-icon-check" id="weather-icon-check" checked>
+            </fieldset>
 
-            <h3>Toggles</h3>
-            <p>The same for everyone in the hub. Only the hub owner can change these.</p>
-            <label for="temperature-check">Display Temperature</label>
-            <input type="checkbox" name="temperature-check" id="temperature-check" class="checkboxes" checked>
-            <br>
-            <label for="feels-like-check">Display Feels Like Temperature</label>
-            <input type="checkbox" name="feels-like-check" id="feels-like-check" class="checkboxes" checked>
-            <br>
-            <label for="condition-check">Display Condition</label>
-            <input type="checkbox" name="condition-check" id="condition-check", class="checkboxes" checked>
-            <br>
-            <label for="humidity-check">Display Humidity</label>
-            <input type="checkbox" name="humidity-check" id="humidity-check", class="checkboxes" checked>
+            <fieldset>
+                <legend>Units</legend>
+                <fieldset>
+                    <legend>Tempature Units</legend>
+                    <label for="celcius-check" class="radio-label">Celcius</label>
+                    <input type="radio" name="tempature-unit" id="celcius-check" value="C" checked>
+                    <br>
+                    <label for="fahrenheit-check" class="radio-label">Fahrenheit</label>
+                    <input type="radio" name="tempature-unit" id="fahrenheit-check" value="F">
+                    <br>
+                    <label for="kelvin-check" class="radio-label">Kelvin</label>
+                    <input type="radio" name="tempature-unit" id="kelvin-check" value="K">
+                    <br>
+                    <label for="show-decimal">Show decimals in Tempatures</label>
+                    <input type="checkbox" name="show-decimal" id="show-decimal">
+                </fieldset>
+                <fieldset>
+                    <legend>Speed Units</legend>
+                    <label for="kmh-check" class="radio-label">Kilometers per hour (km/h)</label>
+                    <input type="radio" name="speed-unit" id="kmh-check" value="kmh" checked>
+                    <br>
+                    <label for="ms-check" class="radio-label">Meters per second (m/s)</label>
+                    <input type="radio" name="speed-unit" id="ms-check" value="ms">
+                    <br>
+                    <label for="mph-check" class="radio-label">Miles per hour (mph)</label>
+                    <input type="radio" name="speed-unit" id="mph-check" value="mph">
+                    <br>
+                    <label for="knots-check" class="radio-label">Knots</label>
+                    <input type="radio" name="speed-unit" id="knots-check" value="knots">
+                </fieldset>
+                <fieldset>
+                    <legend>Precipitation Units</legend>
+                    <label for="mm-check" class="radio-label">Millimeter (mm)</label>
+                    <input type="radio" name="percip-unit" id="mm-check" value="mm" checked>
+                    <br>
+                    <label for="in-check" class="radio-label">Inches</label>
+                    <input type="radio" name="percip-unit" id="in-check" value="in">
+                </fieldset>
+                <br>
+            </fieldset>
 
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Clock and Date Display</h2>
+            <fieldset>
+                <legend>Clock</legend>
+                <label for="show-clock">Show Clock</label>
+                <input type="checkbox" name="show-clock" id="show-clock" checked>
+                <br>
+                <label for="show-seconds">Show seconds in clock</label>
+                <input type="checkbox" name="show-seconds" id="show-seconds">
+                <br>
+                <label for="show-milli">Show milliseconds in clock</label>
+                <input type="checkbox" name="show-seconds" id="show-milli">
+                <br>
+                <label for="clock-timezone">Clock timezone</label>
+                <select name="clock-timezone" id="clock-timezone"></select>
+                <fieldset>
+                    <legend>Clock Format</legend>
+                    <label for="24-check" class="radio-label">24 Hour Clock</label>
+                    <input type="radio" name="clock-format" id="24-check" value="24" checked>
+                    <br>
+                    <label for="12-check" class="radio-label">12 Hour Clock</label>
+                    <input type="radio" name="clock-format" id="12-check" value="12">
+                </fieldset>
+            </fieldset>
+            <fieldset>
+                <legend>Date</legend>
+                <label for="show-date">Show Date</label>
+                <input type="checkbox" name="show-date" id="show-date" checked>
+                <br>
+                <fieldset>
+                    <legend>Date Format</legend>
+                    <label for="dmy-check" class="radio-label">DD/MM/YY</label>
+                    <input type="radio" name="date-format" id="dmy-check" value="dmy" checked>
+                    <br>
+                    <label for="mdy-check" class="radio-label">MM/DD/YY</label>
+                    <input type="radio" name="date-format" id="mdy-check" value="mdy">
+                    <br>
+                    <label for="ymd-check" class="radio-label">YY/MM/DD</label>
+                    <input type="radio" name="date-format" id="ymb-check" value="ymb">
+                </fieldset>
+            </fieldset>
         </section>
 
         <hr>

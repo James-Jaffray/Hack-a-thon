@@ -23,7 +23,120 @@
         <strong class="hub-name"></strong>
         <button type="button" class="switch-hub">Switch hub</button>
     </nav>
-
+    <span id="forecast">
+        <div class="modal" id="forecastModal">
+            <section>
+                <div>
+                    <h2 style="text-align: center;">
+                        <b>
+                            Forecast
+                        </b>
+                        <span class="exitModalBtns" id="exit-forecastBtn">
+                            <b>
+                                X
+                            </b>
+                        </span>
+                    </h2>
+                </div>
+            </section>
+            <section>
+                <div class="flex-container">
+                    <div class="forcast-card" id="day1-forcast">
+                        <h2 class="day-name">
+                        </h2>
+                        <hr>
+                        <img class="weather-icon">
+                        <h3 class="high-temp" id="day1-high">
+                        </h3>
+                        <br>
+                        <h3 class="low-temp" id="day1-low">
+                        </h3>
+                        <br>
+                        <h3 class="precipitation" id="day1-precipitation">
+                        </h3>
+                    </div>
+                    <div class="forcast-card" id="day2-forcast">
+                        <h2 class="day-name"></h2>
+                        <hr>
+                        <img class="weather-icon">
+                        <h3 class="high-temp" id="day2-high">
+                        </h3>
+                        <br>
+                        <h3 class="low-temp" id="day2-low">
+                        </h3>
+                        <br>
+                        <h3 class="precipitation" id="day2-precipitation">
+                        </h3>
+                    </div>
+                    <div class="forcast-card" id="day3-forcast">
+                        <h2 class="day-name"></h2>
+                        <hr>
+                        <img class="weather-icon">
+                        <h3 class="high-temp" id="day3-high">
+                        </h3>
+                        <br>
+                        <h3 class="low-temp" id="day3-low">
+                        </h3>
+                        <br>
+                        <h3 class="precipitation" id="day3-precipitation">
+                        </h3>
+                    </div>
+                    <div class="forcast-card" id="day4-forcast">
+                        <h2 class="day-name"></h2>
+                        <hr>
+                        <img class="weather-icon">
+                        <h3 class="high-temp" id="day4-high">
+                        </h3>
+                        <br>
+                        <h3 class="low-temp" id="day4-low">
+                        </h3>
+                        <br>
+                        <h3 class="precipitation" id="day4-precipitation">
+                        </h3>
+                    </div>
+                    <div class="forcast-card" id="day5-forcast">
+                        <h2 class="day-name"></h2>
+                        <hr>
+                        <img class="weather-icon">
+                        <h3 class="high-temp" id="day5-high">
+                        </h3>
+                        <br>
+                        <h3 class="low-temp" id="day5-low">
+                        </h3>
+                        <br>
+                        <h3 class="precipitation" id="day5-precipitation">
+                        </h3>
+                    </div>
+                    <div class="forcast-card" id="day6-forcast">
+                        <h2 class="day-name"></h2>
+                        <hr>
+                        <img class="weather-icon">
+                        <h3 class="high-temp" id="day6-high">
+                        </h3>
+                        <br>
+                        <h3 class="low-temp" id="day6-low">
+                        </h3>
+                        <br>
+                        <h3 class="precipitation" id="day6-precipitation">
+                        </h3>
+                    </div>
+                    <div class="forcast-card" id="day7-forcast">
+                        <h2 class="day-name"></h2>
+                        <hr>
+                        <img class="weather-icon">
+                        <h3 class="high-temp" id="day7-high">
+                        </h3>
+                        <br>
+                        <h3 class="low-temp" id="day7-low">
+                        </h3>
+                        <br>
+                        <h3 class="precipitation" id="day7-precipitation">
+                        </h3>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </span>
     <header>
         <div id="date-time">
             <p id="date"></p>
@@ -51,6 +164,7 @@
             <div class="weather-header">
                 <h2>Weather</h2>
                 <p id="location"></p>
+                <img class="weather-icon" id="current-weather-icon" width="64" height="64">
             </div>
 
             <div class="weather-details">
@@ -61,6 +175,9 @@
                 <p id="Humidity"></p>
                 <p id="Wind"></p>
             </div>
+            <button id="show-forecastBtn">
+                Show Forecast
+            </button>
         </section>
 
         <section id="upcoming-events">
