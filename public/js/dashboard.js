@@ -137,6 +137,7 @@ const getSecondsToggle = localStorage.getItem('isSecondsToggled');
 const getMillisecondsToggle = localStorage.getItem('isMillisecondsToggled');
 const getClockFormat = localStorage.getItem('clockFormat');
 const getDateToggle = localStorage.getItem('isDateToggled');
+const getWeekdayToggle = localStorage.getItem('isWeekdayToggled');
 const getDateFormat = localStorage.getItem('dateFormat');
 
 const clockToggle = document.getElementById('show-clock');
@@ -144,6 +145,7 @@ const secondsToggle = document.getElementById('show-seconds');
 const millisecondsToggle = document.getElementById('show-milli');
 const clockFormats = document.getElementsByName('clock-format');
 const dateToggle = document.getElementById('show-date');
+const weekdayToggle = document.getElementById('show-weekday');
 const dateFormats = document.getElementsByName('date-format');
 
 if (getClockToggle == null) localStorage.setItem('isClockToggled', clockToggle.checked);
@@ -151,10 +153,11 @@ if (getSecondsToggle == null) localStorage.setItem('isSecondsToggled', secondsTo
 if (getMillisecondsToggle == null) localStorage.setItem('isMillisecondsToggled', millisecondsToggle.checked);
 if (getClockFormat == null) localStorage.setItem('clockFormat', findActiveRadioValue(clockFormats));
 if (getDateToggle == null) localStorage.setItem('isDateToggled', dateToggle.checked);
+if (getWeekdayToggle == null) localStorage.setItem('isWeekdayToggled', weekdayToggle.checked);
 if (getDateFormat == null) localStorage.setItem('dateFormat', findActiveRadioValue(dateFormats));
 
 clockToggle.addEventListener('click', () => {
-    localStorage.setItem('isClockedToggled', clockToggle.checked);
+    localStorage.setItem('isClockToggled', clockToggle.checked);
 });
 
 secondsToggle.addEventListener('click', () => {
@@ -175,6 +178,10 @@ dateToggle.addEventListener('click', () => {
     localStorage.setItem('isDateToggled', dateToggle.checked);
 });
 
+weekdayToggle.addEventListener('click', () => {
+    localStorage.setItem('isWeekdayToggled', weekdayToggle.checked);
+});
+
 for (const format of dateFormats) {
     format.addEventListener('click', () => {
         localStorage.setItem('dateFormat', format.value);
@@ -186,6 +193,7 @@ secondsToggle.checked = getSecondsToggle === "true";
 millisecondsToggle.checked = getMillisecondsToggle === "true";
 setRadioToCorrectSpot(clockFormats, getClockFormat);
 dateToggle.checked = getDateToggle === "true";
+weekdayToggle.checked = getWeekdayToggle === "true";
 setRadioToCorrectSpot(dateFormats, getDateFormat);
 
 // ---- Shortcuts ----

@@ -2,6 +2,7 @@ import { getCurrentWeather } from "./weather.js";
 import { renderShortcuts, shortcuts } from "./shortcuts.js";
 import { updateClock, getDate } from "./clock.js";
 
+
 //getLocation();
 getCurrentWeather(53.5461, -113.4938);
 
@@ -21,5 +22,7 @@ showForecastBtn.addEventListener('click', () => {
 exitForcestBtn.addEventListener('click', () => {
   forecastModal.style.display = 'none';
 });
+
+//console.log(getClockToggle)
 
 //fillForecast(53.5461, -113.4938);
