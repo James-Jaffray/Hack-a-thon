@@ -25,12 +25,31 @@ function error() {
     alert("Sorry, no position available.");
 }
 
+const parseBool = (str) => typeof str === 'string' && str.trim().toLowerCase() === 'true';
+const calcF = (celcius) => (celcius * (9/5)) + 32;
+const calcK = (celcius) => celcius + 273.15;
+
 // What to show is a hub setting chosen by the owner (see dashboard.js). On unless switched off.
+/* this aint grabbing the values correctly & should probably be in an async function to work to, but that would require the variables to be called before hand too
 const settings = (await getMe()).data?.settings ?? {};
 const getTempToggle = settings.isTempToggled !== false;
 const getFeelsLikeToggle = settings.isFeelsLikeToggled !== false;
 const getConditionToggle = settings.isConditionToggled !== false;
 const getHumidityToggle = settings.isHumidityToggled !== false;
+*/
+
+const getTempToggle = parseBool(localStorage.getItem('isTempToggled'));
+const getFeelsLikeToggle = parseBool(localStorage.getItem('isFeelsLikeToggled'));
+const getConditionToggle = parseBool(localStorage.getItem('isConditionToggled'));
+const getHumidityToggle = parseBool(localStorage.getItem('isHumidityToggled'));
+const getWindToggle = parseBool(localStorage.getItem('isWindToggled'));
+const getForecastBtnToggle = parseBool(localStorage.getItem('isForecastBtnToggled'));
+const getWeatherIconToggle = parseBool(localStorage.getItem('isWeatherIconToggled'));
+const getTempUnit = localStorage.getItem('tempatureUnit');
+const getTempRoundToggle = parseBool(localStorage.getItem('isDecInTempToggled'));
+const getWindSpeedUnit = localStorage.getItem('windSpeedUnit');
+const getPrecipUnit = localStorage.getItem('precipUnit');
+
 
 const WEATHER_CODES = {
   0: { day: 'clear-day', night: 'clear-night', label: 'Clear sky' },
@@ -82,7 +101,8 @@ export async function getCurrentWeather(latitude, longitude) {
         });
     }
     try {
-        const response = await fetch(`${baseUrl}?${params.toString()}`);
+        //const response = await fetch(`${baseUrl}?${params.toString()}`);
+        const response = await fetch(`${baseUrl}?${String(params)}`);
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -90,25 +110,21 @@ export async function getCurrentWeather(latitude, longitude) {
 
         data = await response.json();
         sessionStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), data }));
-
         //return data;
     } catch (error) {
         console.error('Failed to fetch weather data:', error);
         document.getElementById('Condition').textContent = 'Weather unavailable';
     }
-
     const icon = document.getElementById('current-weather-icon');
     if (data.current.is_day) icon.src = `https://unpkg.com/@meteocons/svg/fill/${WEATHER_CODES[data.current.weather_code].day}.svg`;
     else icon.src = `https://unpkg.com/@meteocons/svg/fill/${WEATHER_CODES[data.current.weather_code].night}.svg`;
     icon.alt = WEATHER_CODES[data.current.weather_code].label;
 
-    console.log(Boolean(data.current.is_day));
-
     renderTemp(document.getElementById('Tempature'), getTempToggle, data.current.temperature_2m);
     renderFeelsLike(document.getElementById('feels-like'), getFeelsLikeToggle, data.current.apparent_temperature);
     renderCondition(document.getElementById('Condition'), getConditionToggle, WEATHER_CODES[data.current.weather_code].label ?? 'Unknown');
     renderHumidity(document.getElementById('Humidity'), getHumidityToggle, data.current.relative_humidity_2m);
-    
+    renderWindSpeed(document.getElementById('wind'), getWindToggle, data.current.wind_speed_10m);
 
     // just an ugly fix ---- this is a note to make this array not need to be dublicated later -- its me being lazy
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -123,13 +139,34 @@ export async function getCurrentWeather(latitude, longitude) {
         high[i].innerHTML = `High: <b>${data.daily.temperature_2m_max[i]}</b>`;
         low[i].innerHTML = `Low: <b>${data.daily.temperature_2m_min[i]}</b>`;
     }
-    console.log(`Current Temp: ${data.current.is_day}`);
 }
 
-const renderTemp = (para, show, currentTemp) => show ? para.textContent = `${Math.round(currentTemp)}°C` : para.textContent = '';
-const renderFeelsLike = (para, show, feelsLike) => show ? para.innerHTML = `Feels like <b>${Math.round(feelsLike)}°</b>` : para.textContent = '';
-const renderCondition = (para, show, condition) => show ? para.textContent = condition : para.textContent = '';
-const renderHumidity = (para, show, humidity) => show ? para.innerHTML = `Humidity <b>${humidity}%</b>` : para.textContent = '';
+
+function formatTempature(degrees, type, roundTemp, isFeelsLike) {
+    if (isFeelsLike == true) {
+        if (type == 'C') {
+            return roundTemp ? `${Math.round(degrees)}°C` : `${degrees}°C`;
+        } else if (type == 'F') {
+            return roundTemp ? `${Math.round(calcF(degrees))}°F` : `${calcF(degrees)}°F`;
+        } else if (type == 'K') {
+            return roundTemp ? `${Math.round(calcK(degrees))}K` : `${calcK(degrees)}K`;
+        }
+    } else {
+        if (type == 'C') {
+            return roundTemp ? `Feels like <b>${Math.round(degrees)}°C</b>` : `Feels like <b>${degrees}°C</b>`;
+        } else if (type == 'F') {
+            return roundTemp ? `Feels like <b>${Math.round(calcF(degrees))}°F</b>` : `Feels like <b>${calcF(degrees)}°F</b>`;
+        } else if (type == 'K') {
+            return roundTemp ? `Feels like <b>${Math.round(calcK(degrees))}K</b>` : `Feels like <b>${calcK(degrees)}K</b>`;
+        }
+    }
+}
+
+const renderTemp = (p, show, currentTemp) => show ? p.textContent = formatTempature(currentTemp, getTempUnit, !getTempRoundToggle, true) : p.textContent = '';
+const renderFeelsLike = (p, show, feelsLike) => show ? p.innerHTML = formatTempature(feelsLike, getTempUnit, !getTempRoundToggle, false) : p.textContent = '';
+const renderCondition = (p, show, condition) => show ? p.textContent = condition : p.textContent = '';
+const renderHumidity = (p, show, humidity) => show ? p.innerHTML = `Humidity <b>${humidity}%</b>` : p.textContent = '';
+const renderWindSpeed = (p, show, wind) => show ? p.innerHTML = `Wind Speed <b>${wind}km/h</b>` : p.textContent = '';
 
 /*function getWeatherIcon(code, isDay) {
     const entry = wmoToIcon[code] || { day: "unknown", night: "unknown", label: "Unknown" };
